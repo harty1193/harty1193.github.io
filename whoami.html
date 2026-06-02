@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Who Am I — Hrudananda Das</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --b50:  #e6f1fb;
+      --b100: #b5d4f4;
+      --b400: #378add;
+      --b600: #185fa5;
+      --b800: #0c447c;
+      --b900: #042c53;
+      --font: 'Courier Prime', 'Courier New', Courier, monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: #f5f8fc;
+      color: var(--b900);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── TOP NAV ── */
+    nav.topnav {
+      padding: 1.8rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--b100);
+    }
+    .nav-logo {
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      color: var(--b600);
+      text-decoration: none;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      color: var(--b400);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .nav-links a:hover { color: var(--b600); }
+
+    /* ── PAGE BODY ── */
+    .page {
+      flex: 1;
+      padding: 3rem 2.5rem 4rem;
+      max-width: 860px;
+    }
+
+    .back {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      color: var(--b400);
+      text-decoration: none;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-bottom: 2.5rem;
+    }
+    .back:hover { color: var(--b900); }
+
+    /* ── PROFILE HEADER ── */
+    .profile {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+      margin-bottom: 2.8rem;
+    }
+    .photo-box {
+      width: 110px;
+      height: 110px;
+      flex-shrink: 0;
+      border: 1px solid var(--b100);
+      background: var(--b50);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--b400);
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .profile-info h1 {
+      font-size: clamp(22px, 4vw, 36px);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--b900);
+      margin-bottom: 0.2rem;
+    }
+    .profile-info .role {
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      color: var(--b400);
+      text-transform: uppercase;
+      margin-bottom: 0.9rem;
+    }
+    .profile-info .bio {
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--b600);
+      max-width: 580px;
+    }
+    .profile-info .contact {
+      margin-top: 0.9rem;
+      font-size: 12px;
+      color: var(--b400);
+      letter-spacing: 0.06em;
+    }
+    .profile-info .contact a {
+      color: var(--b400);
+      text-decoration: none;
+    }
+    .profile-info .contact a:hover { color: var(--b900); }
+
+    /* ── SECTIONS ── */
+    .section { margin-top: 2.8rem; }
+
+    .sec-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--b100);
+      margin-bottom: 1.4rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--b100);
+    }
+
+    /* ── WORK EXPERIENCE ── */
+    .job {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 0 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .job-dates {
+      font-size: 11px;
+      color: var(--b100);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding-top: 2px;
+      line-height: 1.6;
+    }
+    .job-body h3 {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--b900);
+      margin-bottom: 0.15rem;
+    }
+    .job-body .company {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--b400);
+      margin-bottom: 0.6rem;
+    }
+    .job-body p {
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--b600);
+    }
+    .job-body ul {
+      margin: 0.5rem 0 0 1rem;
+      padding: 0;
+    }
+    .job-body ul li {
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--b600);
+      margin-bottom: 0.3rem;
+    }
+
+    /* ── SKILLS ── */
+    .skill-group { margin-bottom: 1.4rem; }
+    .skill-group-label {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--b400);
+      margin-bottom: 0.5rem;
+    }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.4rem 0.6rem; }
+    .tag {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--b800);
+      background: var(--b50);
+      border: 1px solid var(--b100);
+      padding: 3px 9px;
+      border-radius: 2px;
+    }
+    .tag.muted {
+      color: var(--b100);
+      background: #f5f8fc;
+      border-color: #ddeaf6;
+      font-style: italic;
+    }
+
+    /* ── CERTS ── */
+    .cert-item {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 0 1.5rem;
+      margin-bottom: 1.2rem;
+      align-items: start;
+    }
+    .cert-badge {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--b600);
+      background: var(--b50);
+      border: 1px solid var(--b100);
+      padding: 4px 8px;
+      border-radius: 2px;
+      text-align: center;
+      line-height: 1.5;
+    }
+    .cert-badge.dim { opacity: 0.4; }
+    .cert-body h4 {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--b900);
+      margin-bottom: 0.15rem;
+    }
+    .cert-body h4.dim { opacity: 0.4; }
+    .cert-body .issuer {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--b400);
+    }
+    .cert-body .issuer.dim { color: var(--b100); font-style: italic; }
+
+    /* ── EDUCATION ── */
+    .edu-item {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 0 1.5rem;
+      margin-bottom: 1.4rem;
+    }
+    .edu-dates {
+      font-size: 11px;
+      color: var(--b100);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding-top: 2px;
+    }
+    .edu-body h3 {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--b900);
+      margin-bottom: 0.15rem;
+    }
+    .edu-body .school {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--b400);
+    }
+
+    /* ── PROJECTS ── */
+    .proj-item { margin-bottom: 1.4rem; }
+    .proj-item h4 {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--b900);
+      margin-bottom: 0.2rem;
+    }
+    .proj-item .proj-meta {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--b400);
+      margin-bottom: 0.35rem;
+    }
+    .proj-item p {
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--b600);
+    }
+
+    /* ── LANGUAGES ── */
+    .lang-item {
+      display: flex;
+      align-items: baseline;
+      gap: 0.8rem;
+      margin-bottom: 0.5rem;
+    }
+    .lang-name {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--b900);
+      min-width: 90px;
+    }
+    .lang-level {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--b400);
+    }
+
+    /* ── PLACEHOLDER ── */
+    .placeholder-block {
+      border: 1px dashed var(--b100);
+      padding: 1rem 1.2rem;
+      border-radius: 2px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--b100);
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    /* ── CONTACT ── */
+    .contact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .contact-list a {
+      font-size: 13px;
+      color: var(--b400);
+      letter-spacing: 0.06em;
+      text-decoration: none;
+    }
+    .contact-list a:hover { color: var(--b900); }
+    .contact-list span {
+      font-size: 13px;
+      color: var(--b600);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 1.4rem 2.5rem;
+      border-top: 1px solid var(--b100);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .footer-text {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--b100);
+      text-transform: uppercase;
+    }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--b400);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .footer-links a:hover { color: var(--b600); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav.topnav, .page, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .profile { flex-direction: column; gap: 1.2rem; }
+      .job, .cert-item, .edu-item { grid-template-columns: 1fr; }
+      .job-dates, .edu-dates { margin-bottom: 0.3rem; }
+      .nav-links { gap: 1.2rem; }
+    }
+
+    /* ── DARK MODE ── */
+    @media (prefers-color-scheme: dark) {
+      body { background: #050e1a; color: #b5d4f4; }
+      nav.topnav, footer { border-color: #0c3055; }
+      .nav-logo { color: #85b7eb; }
+      .nav-links a, .back, .footer-links a { color: #378add; }
+      .nav-links a:hover, .back:hover, .footer-links a:hover { color: #b5d4f4; }
+
+      .photo-box { background: #0c3055; border-color: #185fa5; color: #378add; }
+      .profile-info h1, .job-body h3, .cert-body h4, .edu-body h3, .proj-item h4, .lang-name { color: #b5d4f4; }
+      .profile-info .role, .job-dates, .job-body .company, .edu-dates, .edu-body .school,
+      .proj-item .proj-meta, .lang-level, .skill-group-label, .cert-body .issuer { color: #378add; }
+      .profile-info .bio, .job-body p, .job-body ul li, .proj-item p { color: #378add; }
+      .profile-info .contact, .profile-info .contact a { color: #378add; }
+
+      .sec-label { color: #185fa5; border-color: #0c3055; }
+
+      .tag { background: #0c3055; border-color: #185fa5; color: #85b7eb; }
+      .tag.muted { background: #050e1a; border-color: #0c3055; color: #185fa5; }
+
+      .cert-badge { background: #0c3055; border-color: #185fa5; color: #85b7eb; }
+      .cert-body .issuer.dim { color: #185fa5; }
+
+      .placeholder-block { border-color: #0c3055; color: #185fa5; }
+
+      .contact-list a { color: #378add; }
+      .contact-list a:hover { color: #b5d4f4; }
+      .contact-list span { color: #378add; }
+
+      .footer-text { color: #185fa5; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="topnav">
+    <a class="nav-logo" href="index.html">H.DAS</a>
+    <ul class="nav-links">
+      <li><a href="index.html#blog">Blog</a></li>
+      <li><a href="whoami.html">About</a></li>
+      <li><a href="https://github.com/harty1193" target="_blank" rel="noopener">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <div class="page">
+
+    <a class="back" href="index.html">← Back</a>
+
+    <!-- PROFILE HEADER -->
+    <div class="profile">
+      <div class="photo-box">PHOTO<br>COMING<br>SOON</div>
+      <div class="profile-info">
+        <h1>Hrudananda Das</h1>
+        <p class="role">Support Escalation Engineer · Microsoft · 10+ Years</p>
+        <p class="bio">Experienced Support Escalation Engineer at Microsoft with over 10 years in enterprise IT, Windows infrastructure, and endpoint security. Final escalation point for high-severity incidents across Windows and Azure platforms. Specialised in BitLocker, Autopilot, WDAC, and PowerShell automation. Actively transitioning into cybersecurity — with hands-on IoT and AI robotics projects on the side. Star Achiever — One Microsoft (2023).</p>
+        <p class="contact">
+          <a href="mailto:hrudananda.das@outlook.com">hrudananda.das@outlook.com</a>
+          &nbsp;·&nbsp;
+          <a href="#contact">Contact →</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- 01 WORK EXPERIENCE -->
+    <div class="section">
+      <div class="sec-label">01 &nbsp; Work Experience</div>
+
+      <div class="job">
+        <div class="job-dates">Sep 2025<br>Present</div>
+        <div class="job-body">
+          <h3>Technical Support Escalation Engineer</h3>
+          <div class="company">Microsoft · Bengaluru</div>
+          <ul>
+            <li>Final escalation point for high-severity, enterprise-impacting incidents on Windows and Azure platforms; drives end-to-end resolution through structured root-cause analysis and targeted PowerShell diagnostic automation.</li>
+            <li>Analyses escalation patterns across cases to identify systemic product issues; translates findings into actionable engineering recommendations and partners with product teams to land upstream fixes.</li>
+            <li>Leads incident communication during live-site events — timely status updates, service alerts, and decisive guidance keeping engineering, support, and business stakeholders aligned until resolution.</li>
+            <li>Strengthens escalation capability by running targeted debug coaching, reviewing diagnostic approaches, and building knowledge-base articles and self-serve runbooks.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="job">
+        <div class="job-dates">Apr 2021<br>Sep 2025</div>
+        <div class="job-body">
+          <h3>Technical Support Engineer</h3>
+          <div class="company">Microsoft · Bengaluru</div>
+          <ul>
+            <li>Top-tier enterprise support focused on Windows servicing, Autopilot, BitLocker (MBAM), MDT, WDS, KMS, and upgrade-related issues.</li>
+            <li>Scripted custom diagnostic and remediation solutions; authored internal knowledge articles and delivered technical training sessions.</li>
+            <li>Mentored junior engineers and made voluntary contributions to the Intune support team.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="job">
+        <div class="job-dates">Dec 2019<br>Mar 2021</div>
+        <div class="job-body">
+          <h3>Analyst</h3>
+          <div class="company">Wipro Technology – Univar Solutions · Hyderabad</div>
+          <ul>
+            <li>Created and maintained Subversion repositories; validated QlikView dashboards against SAP BW data.</li>
+            <li>Performed Python scripting and Excel reporting; migrated repositories from SVN to Git.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="job">
+        <div class="job-dates">Nov 2015<br>Nov 2019</div>
+        <div class="job-body">
+          <h3>Project Engineer</h3>
+          <div class="company">Wipro Technology – Microsoft · Hyderabad</div>
+          <ul>
+            <li>Hosted file shares with DFS namespace; created and managed VMs and VNets.</li>
+            <li>Configured and troubleshot WorkFolder and OneDrive sync issues.</li>
+            <li>Resolved desktop environment issues: performance, drivers, BSOD, WDS, Windows Update, RDP, VPN.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="placeholder-block">+ Future role — add when ready</div>
+    </div>
+
+    <!-- 02 SKILLS -->
+    <div class="section">
+      <div class="sec-label">02 &nbsp; Skills</div>
+
+      <div class="skill-group">
+        <div class="skill-group-label">Endpoint &amp; Security</div>
+        <div class="tags">
+          <span class="tag">BitLocker</span>
+          <span class="tag">MBAM</span>
+          <span class="tag">WDAC</span>
+          <span class="tag">Autopilot</span>
+          <span class="tag">Intune</span>
+          <span class="tag">MDT</span>
+          <span class="tag">WDS</span>
+          <span class="tag">KMS</span>
+          <span class="tag">Windows Servicing</span>
+          <span class="tag">Windows Setup &amp; Upgrade</span>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="skill-group-label">Cloud &amp; Infrastructure</div>
+        <div class="tags">
+          <span class="tag">Azure Administration</span>
+          <span class="tag">Azure DevOps</span>
+          <span class="tag">Hyper-V</span>
+          <span class="tag">DFS</span>
+          <span class="tag">VMs &amp; VNets</span>
+          <span class="tag muted">SC-200 — in progress</span>
+          <span class="tag muted">AZ-500 — planned</span>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="skill-group-label">Scripting &amp; Dev</div>
+        <div class="tags">
+          <span class="tag">PowerShell</span>
+          <span class="tag">Python</span>
+          <span class="tag">C</span>
+          <span class="tag">Git</span>
+          <span class="tag muted">Rust — exploring</span>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="skill-group-label">IoT &amp; Hardware</div>
+        <div class="tags">
+          <span class="tag">Arduino / Raspberry Pi</span>
+          <span class="tag">IR Sensors</span>
+          <span class="tag">Line Follower Robotics</span>
+          <span class="tag muted">Computer Vision — exploring</span>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="skill-group-label">Soft Skills</div>
+        <div class="tags">
+          <span class="tag">Escalation Management</span>
+          <span class="tag">Root Cause Analysis</span>
+          <span class="tag">Technical Mentoring</span>
+          <span class="tag">Knowledge Base Authoring</span>
+          <span class="tag">Stakeholder Communication</span>
+          <span class="tag">Incident Management</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 PROJECTS & BUILDS -->
+    <div class="section">
+      <div class="sec-label">03 &nbsp; Projects &amp; Builds</div>
+
+      <div class="proj-item">
+        <h4>Formula AI</h4>
+        <div class="proj-meta">Aug 2024 – Sep 2024 · IoT · Computer Vision</div>
+        <p>Robot with a camera to see and avoid obstacles while racing in a closed circuit. Explores real-time computer vision for autonomous navigation.</p>
+      </div>
+
+      <div class="proj-item">
+        <h4>Robo Rumble</h4>
+        <div class="proj-meta">Aug 2023 – Sep 2023 · IoT · Robotics</div>
+        <p>Three-wheeled maze-solving robot with 4 IR sensors using line-following logic. Built to explore embedded sensor systems and motor control.</p>
+      </div>
+
+      <div class="proj-item">
+        <h4>UPI Finance Coach</h4>
+        <div class="proj-meta">2024 – Present · Python · Streamlit · Anthropic SDK</div>
+        <p>Personal finance app that parses Indian bank and UPI statements and delivers AI-powered spending insights using the Anthropic API.</p>
+      </div>
+
+      <div class="proj-item">
+        <h4>Mobile Switch</h4>
+        <div class="proj-meta">May 2014 – Oct 2014 · Android · IoT</div>
+        <p>Android app paired with an IoT switchboard to control home appliances over the internet — an early home automation experiment.</p>
+      </div>
+
+      <div class="proj-item">
+        <h4>Offline Messenger</h4>
+        <div class="proj-meta">May 2013 – Aug 2013 · Android</div>
+        <p>Android messenger for local chat over Wi-Fi without internet access, built for offline peer-to-peer communication.</p>
+      </div>
+
+      <div class="proj-item">
+        <h4>Books Want</h4>
+        <div class="proj-meta">Mar 2015 – Jun 2015 · Android</div>
+        <p>Android app to search for free books across the web.</p>
+      </div>
+
+      <div class="placeholder-block">+ Future project — add when ready</div>
+    </div>
+
+    <!-- 04 CERTIFICATIONS -->
+    <div class="section">
+      <div class="sec-label">04 &nbsp; Certifications</div>
+
+      <div class="cert-item">
+        <div class="cert-badge">Microsoft</div>
+        <div class="cert-body">
+          <h4>Azure Administrator Associate</h4>
+          <div class="issuer">Microsoft · AZ-104</div>
+        </div>
+      </div>
+
+      <div class="cert-item">
+        <div class="cert-badge">Microsoft</div>
+        <div class="cert-body">
+          <h4>Azure Fundamentals</h4>
+          <div class="issuer">Microsoft · AZ-900</div>
+        </div>
+      </div>
+
+      <div class="cert-item">
+        <div class="cert-badge">Microsoft</div>
+        <div class="cert-body">
+          <h4>Azure AI Fundamentals</h4>
+          <div class="issuer">Microsoft · AI-900</div>
+        </div>
+      </div>
+
+      <div class="cert-item">
+        <div class="cert-badge">Microsoft</div>
+        <div class="cert-body">
+          <h4>Security, Compliance &amp; Identity Fundamentals</h4>
+          <div class="issuer">Microsoft · SC-900</div>
+        </div>
+      </div>
+
+      <div class="cert-item">
+        <div class="cert-badge dim">Future</div>
+        <div class="cert-body">
+          <h4 class="dim">Security Operations Analyst Associate</h4>
+          <div class="issuer dim">Microsoft · SC-200 — in progress</div>
+        </div>
+      </div>
+
+      <div class="cert-item">
+        <div class="cert-badge dim">Future</div>
+        <div class="cert-body">
+          <h4 class="dim">Azure Security Engineer Associate</h4>
+          <div class="issuer dim">Microsoft · AZ-500 — planned</div>
+        </div>
+      </div>
+
+      <div class="placeholder-block">+ Add more certifications here</div>
+    </div>
+
+    <!-- 05 EDUCATION -->
+    <div class="section">
+      <div class="sec-label">05 &nbsp; Education</div>
+
+      <div class="edu-item">
+        <div class="edu-dates">2015–2017</div>
+        <div class="edu-body">
+          <h3>Master of Computer Application (MCA)</h3>
+          <div class="school">Utkal University · Odisha</div>
+        </div>
+      </div>
+
+      <div class="placeholder-block">+ Add Bachelor's or other qualifications here</div>
+    </div>
+
+    <!-- 06 ACHIEVEMENTS -->
+    <div class="section">
+      <div class="sec-label">06 &nbsp; Achievements</div>
+
+      <div class="tags" style="flex-direction: column; gap: 0.6rem;">
+        <span style="font-size:13px; color: var(--b600); letter-spacing:.04em;">⬡ &nbsp;Star Achiever — One Microsoft (2023)</span>
+        <span style="font-size:13px; color: var(--b600); letter-spacing:.04em;">⬡ &nbsp;Winner — IT Quiz, Mindfire Solutions (2013)</span>
+        <span style="font-size:13px; color: var(--b600); letter-spacing:.04em;">⬡ &nbsp;Junior Level Cyber Olympiad — District Level (2006)</span>
+        <span style="font-size:13px; color: var(--b600); letter-spacing:.04em;">⬡ &nbsp;Notable Editor — School Magazine (2007)</span>
+      </div>
+
+      <div class="placeholder-block" style="margin-top: 1rem;">+ Add future awards or recognition here</div>
+    </div>
+
+    <!-- 07 WRITING & TALKS -->
+    <div class="section">
+      <div class="sec-label">07 &nbsp; Writing &amp; Talks</div>
+      <div class="placeholder-block">+ Blog posts and technical articles — add when published</div>
+      <div class="placeholder-block">+ Internal knowledge articles authored at Microsoft</div>
+      <div class="placeholder-block">+ Conference sessions, talks, or webinars — add when ready</div>
+    </div>
+
+    <!-- 08 LANGUAGES -->
+    <div class="section">
+      <div class="sec-label">08 &nbsp; Languages</div>
+      <div class="lang-item">
+        <span class="lang-name">English</span>
+        <span class="lang-level">Full Professional Proficiency</span>
+      </div>
+      <div class="lang-item">
+        <span class="lang-name">Hindi</span>
+        <span class="lang-level">Fluent</span>
+      </div>
+      <div class="lang-item">
+        <span class="lang-name">Odia</span>
+        <span class="lang-level">Native</span>
+      </div>
+    </div>
+
+    <!-- 09 CONTACT -->
+    <div class="section" id="contact">
+      <div class="sec-label">09 &nbsp; Contact</div>
+      <div class="contact-list">
+        <a href="mailto:hrudananda.das@outlook.com">hrudananda.das@outlook.com</a>
+        <a href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener">linkedin.com/in/harty1193</a>
+        <a href="https://github.com/harty1193" target="_blank" rel="noopener">github.com/harty1193</a>
+        <span>+91 9583678488</span>
+        <span>Bengaluru, India</span>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <span class="footer-text">© 2026 Hrudananda Das</span>
+    <div class="footer-links">
+      <a href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/harty1193" target="_blank" rel="noopener">GitHub</a>
+      <a href="/feed.xml">RSS</a>
+    </div>
+  </footer>
+
+</body>
+</html>
