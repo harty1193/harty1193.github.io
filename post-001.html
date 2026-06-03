@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automating BitLocker Recovery Key Backup — Hrudananda Das</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root {
+      --b50:#e6f1fb; --b100:#b5d4f4; --b200:#85b7eb;
+      --b400:#378add; --b600:#185fa5; --b800:#0c447c; --b900:#042c53;
+      --green:#1a7a4a; --green-bg:#e8f7ef; --green-border:#9dd6b8;
+      --orange:#a05a00; --orange-bg:#fff4e6; --orange-border:#f5c97a;
+      --red:#8b1a1a; --red-bg:#fdf0f0; --red-border:#f5b7b7;
+      --font:'Courier Prime','Courier New',Courier,monospace;
+    }
+    html { scroll-behavior:smooth; }
+    body { font-family:var(--font); background:#f5f8fc; color:var(--b900); min-height:100vh; display:flex; flex-direction:column; }
+
+    /* NAV */
+    nav.topnav { padding:1.8rem 2.5rem; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--b100); }
+    .nav-logo { font-size:13px; letter-spacing:.12em; color:var(--b600); text-decoration:none; font-weight:700; text-transform:uppercase; }
+    .nav-links { display:flex; gap:2rem; list-style:none; }
+    .nav-links a { font-size:12px; letter-spacing:.1em; color:var(--b400); text-decoration:none; text-transform:uppercase; }
+    .nav-links a:hover,.nav-links a.active { color:var(--b900); }
+
+    /* LAYOUT */
+    .layout { display:grid; grid-template-columns:1fr 220px; gap:0; flex:1; }
+    .main-col { padding:3rem 3rem 5rem 2.5rem; border-right:1px solid var(--b100); }
+    .side-col { padding:3rem 2rem 4rem; }
+
+    /* BACK */
+    .back { font-size:12px; letter-spacing:.12em; color:var(--b400); text-decoration:none; text-transform:uppercase; display:inline-block; margin-bottom:2rem; }
+    .back:hover { color:var(--b900); }
+
+    /* POST HEADER */
+    .post-header { margin-bottom:3rem; padding-bottom:2rem; border-bottom:1px solid var(--b100); }
+    .post-num { font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--b200); margin-bottom:.7rem; }
+    .post-header h1 { font-size:clamp(20px,3.5vw,30px); font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--b900); line-height:1.25; margin-bottom:.7rem; }
+    .post-meta { font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--b200); margin-bottom:1rem; }
+    .post-tags { display:flex; flex-wrap:wrap; gap:.3rem .5rem; }
+    .ptag { font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--b600); background:var(--b50); border:1px solid var(--b100); padding:2px 7px; border-radius:1px; }
+
+    /* ARTICLE BODY */
+    .article { max-width:680px; }
+    .article p { font-size:14px; line-height:1.85; color:var(--b800); margin-bottom:1.4rem; }
+    .article h2 { font-size:13px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--b600); margin:2.5rem 0 1rem; padding-bottom:.4rem; border-bottom:1px solid var(--b100); }
+    .article h3 { font-size:13px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--b900); margin:1.8rem 0 .7rem; }
+    .article ul, .article ol { margin:.5rem 0 1.4rem 1.2rem; }
+    .article li { font-size:14px; line-height:1.8; color:var(--b800); margin-bottom:.3rem; }
+    .article strong { color:var(--b900); }
+    .article a { color:var(--b400); }
+    .article a:hover { color:var(--b900); }
+
+    /* CALLOUT BOXES */
+    .callout { border-left:3px solid; padding:.9rem 1.1rem; margin:1.4rem 0; border-radius:0 2px 2px 0; font-size:13px; line-height:1.75; }
+    .callout.info  { border-color:var(--b400); background:var(--b50); color:var(--b800); }
+    .callout.tip   { border-color:var(--green); background:var(--green-bg); color:var(--green); }
+    .callout.warn  { border-color:#a07800; background:var(--orange-bg); color:var(--orange); }
+    .callout.danger{ border-color:#c0392b; background:var(--red-bg); color:var(--red); }
+    .callout strong { display:block; font-size:10px; letter-spacing:.16em; text-transform:uppercase; margin-bottom:.4rem; }
+
+    /* COMPARISON TABLE */
+    .cmp-table { width:100%; border-collapse:collapse; margin:1.4rem 0; font-size:12px; }
+    .cmp-table th { font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--b600); background:var(--b50); padding:.6rem .8rem; border:1px solid var(--b100); text-align:left; font-weight:700; }
+    .cmp-table td { padding:.6rem .8rem; border:1px solid var(--b100); color:var(--b800); vertical-align:top; line-height:1.6; }
+    .cmp-table tr:hover td { background:var(--b50); }
+    .badge { display:inline-block; font-size:9px; letter-spacing:.1em; text-transform:uppercase; padding:2px 6px; border-radius:1px; border:1px solid; }
+    .badge.aad  { color:#185fa5; background:#e6f1fb; border-color:#b5d4f4; }
+    .badge.ad   { color:#1a5c2e; background:#e8f7ef; border-color:#9dd6b8; }
+    .badge.msa  { color:#7c3a00; background:#fff4e6; border-color:#f5c97a; }
+
+    /* CODE BLOCK */
+    .code-wrap { margin:1.4rem 0; }
+    .code-header { display:flex; justify-content:space-between; align-items:center; background:var(--b900); padding:.55rem 1rem; border-radius:2px 2px 0 0; }
+    .code-header .code-lang { font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--b200); }
+    .code-header .copy-btn { font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--b400); background:none; border:1px solid var(--b800); padding:2px 8px; border-radius:1px; cursor:pointer; font-family:var(--font); }
+    .code-header .copy-btn:hover { color:#fff; border-color:var(--b400); }
+    pre { background:#041e38; border-radius:0 0 2px 2px; padding:1.4rem 1.2rem; overflow-x:auto; margin:0; }
+    pre code { font-family:var(--font); font-size:12.5px; line-height:1.75; color:#b5d4f4; white-space:pre; }
+    /* syntax-ish tints */
+    .kw  { color:#85b7eb; } /* keywords */
+    .cm  { color:#4a7a9b; font-style:italic; } /* comments */
+    .str { color:#7ecba8; } /* strings */
+    .var { color:#d4b896; } /* variables */
+    .fn  { color:#c7a3e0; } /* functions/cmdlets */
+    .num { color:#f0c674; } /* numbers */
+    .op  { color:#85b7eb; } /* operators */
+
+    /* SECTION FLOW DIAGRAM */
+    .flow { display:flex; flex-direction:column; gap:.4rem; margin:1.2rem 0 1.6rem; }
+    .flow-step { display:flex; align-items:flex-start; gap:.8rem; }
+    .flow-icon { width:28px; height:28px; border-radius:50%; background:var(--b50); border:1px solid var(--b100); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:var(--b600); flex-shrink:0; margin-top:1px; }
+    .flow-text { font-size:13px; line-height:1.7; color:var(--b800); flex:1; }
+    .flow-arrow { font-size:14px; color:var(--b200); padding-left:8px; }
+
+    /* SIDEBAR */
+    .side-section { margin-bottom:2.5rem; }
+    .side-label { font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--b200); margin-bottom:1rem; padding-bottom:.4rem; border-bottom:1px solid var(--b100); }
+    .side-links { list-style:none; display:flex; flex-direction:column; gap:.5rem; }
+    .side-links a { font-size:12px; letter-spacing:.06em; color:var(--b400); text-decoration:none; text-transform:uppercase; display:flex; align-items:baseline; gap:.5rem; }
+    .side-links a:hover { color:var(--b900); }
+    .side-links .snum { font-size:10px; color:var(--b200); min-width:18px; }
+    .toc-links a { font-size:12px; color:var(--b400); text-decoration:none; display:block; padding:.25rem 0; letter-spacing:.04em; border-left:2px solid transparent; padding-left:.6rem; }
+    .toc-links a:hover { border-color:var(--b400); color:var(--b900); }
+
+    /* FOOTER */
+    footer { padding:1.4rem 2.5rem; border-top:1px solid var(--b100); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.5rem; }
+    .footer-text { font-size:11px; letter-spacing:.1em; color:var(--b200); text-transform:uppercase; }
+    .footer-links { display:flex; gap:1.5rem; }
+    .footer-links a { font-size:11px; letter-spacing:.1em; color:var(--b400); text-decoration:none; text-transform:uppercase; }
+    .footer-links a:hover { color:var(--b600); }
+    .post-nav { display:flex; justify-content:space-between; margin-top:3rem; padding-top:2rem; border-top:1px solid var(--b100); font-size:12px; letter-spacing:.08em; text-transform:uppercase; }
+    .post-nav a { color:var(--b400); text-decoration:none; }
+    .post-nav a:hover { color:var(--b900); }
+
+    @media(max-width:700px){
+      .layout{grid-template-columns:1fr;}
+      .main-col{padding:2rem 1.5rem; border-right:none; border-bottom:1px solid var(--b100);}
+      .side-col{padding:2rem 1.5rem;}
+    }
+
+    /* DARK */
+    @media(prefers-color-scheme:dark){
+      body{background:#050e1a;color:#b5d4f4;}
+      nav.topnav,footer,.main-col,.post-header,.post-nav{border-color:#0c3055;}
+      .nav-logo{color:#85b7eb;}
+      .nav-links a,.back,.footer-links a{color:#378add;}
+      .nav-links a:hover,.nav-links a.active,.back:hover,.footer-links a:hover{color:#b5d4f4;}
+      .post-header h1,.article h3{color:#b5d4f4;}
+      .post-num,.post-meta,.article h2,.side-label{color:#185fa5;}
+      .article h2{border-color:#0c3055;}
+      .article p,.article li{color:#5a8fbf;}
+      .article strong{color:#85b7eb;}
+      .ptag{background:#0c3055;border-color:#185fa5;color:#85b7eb;}
+      .callout.info{background:#041e38;color:#85b7eb;border-color:#378add;}
+      .callout.tip{background:#041e0f;color:#4ab87a;border-color:#1a7a4a;}
+      .callout.warn{background:#1a1200;color:#c4952a;border-color:#a07800;}
+      .callout.danger{background:#1a0505;color:#d45c5c;border-color:#8b1a1a;}
+      .cmp-table th{background:#0c3055;color:#85b7eb;border-color:#185fa5;}
+      .cmp-table td{border-color:#0c3055;color:#5a8fbf;}
+      .cmp-table tr:hover td{background:#0a2040;}
+      .flow-icon{background:#0c3055;border-color:#185fa5;color:#85b7eb;}
+      .flow-text{color:#5a8fbf;}
+      .flow-arrow{color:#185fa5;}
+      .side-section .side-label{border-color:#0c3055;}
+      .side-links a,.toc-links a{color:#378add;}
+      .side-links a:hover,.toc-links a:hover{color:#b5d4f4;}
+      .toc-links a:hover{border-color:#378add;}
+      .footer-text{color:#185fa5;}
+      .post-nav a{color:#378add;}
+      .post-nav a:hover{color:#b5d4f4;}
+    }
+  </style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="nav-logo" href="index.html">H.DAS</a>
+  <ul class="nav-links">
+    <li><a href="notes.html" class="active">Blog</a></li>
+    <li><a href="whoami.html">About</a></li>
+    <li><a href="https://github.com/harty1193" target="_blank" rel="noopener">GitHub</a></li>
+  </ul>
+</nav>
+
+<div class="layout">
+<main class="main-col">
+  <a class="back" href="notes.html">← All notes</a>
+
+  <header class="post-header">
+    <div class="post-num">Note 01</div>
+    <h1>Automating BitLocker Recovery Key Backup to the Cloud</h1>
+    <div class="post-meta">June 2026 &nbsp;·&nbsp; Hrudananda Das &nbsp;·&nbsp; 8 min read</div>
+    <div class="post-tags">
+      <span class="ptag">BitLocker</span>
+      <span class="ptag">PowerShell</span>
+      <span class="ptag">Entra ID</span>
+      <span class="ptag">Active Directory</span>
+      <span class="ptag">MSA</span>
+      <span class="ptag">MBAM</span>
+    </div>
+  </header>
+
+  <article class="article">
+
+    <p>BitLocker is enabled on millions of enterprise Windows devices — but enabling it is only half the story. The recovery password sitting in a key protector is useless if it lives nowhere retrievable. I've seen this failure mode on the escalation floor more times than I can count: device gets bricked at the pre-boot screen, and nobody can find the recovery key.</p>
+
+    <p>This note covers how to automate recovery key backup across all three destinations — <strong>Entra ID (Azure AD)</strong>, <strong>on-premises Active Directory</strong>, and <strong>Microsoft Account (MSA)</strong> — using the right PowerShell cmdlet for each scenario, plus a production-ready script that handles the common messy reality of multiple key protectors on one drive.</p>
+
+    <div class="callout info">
+      <strong>Prerequisites</strong>
+      BitLocker must already be enabled on the target drive. The scripts below back up an existing recovery password — they don't enable BitLocker from scratch. Run PowerShell as Administrator.
+    </div>
+
+    <!-- SECTION 1 -->
+    <h2 id="cmdlets">The Three Backup Cmdlets</h2>
+
+    <p>Microsoft provides three distinct cmdlets for backing up a BitLocker recovery password, each targeting a different destination. Choosing the wrong one for your environment is the most common mistake.</p>
+
+    <table class="cmp-table">
+      <thead>
+        <tr>
+          <th>Cmdlet</th>
+          <th>Destination</th>
+          <th>Scenario</th>
+          <th>Requires</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>BackupToAAD-BitLockerKeyProtector</code></td>
+          <td><span class="badge aad">Entra ID / AAD</span></td>
+          <td>Cloud-joined or hybrid devices managed by Intune / Entra</td>
+          <td>Device registered in Entra ID; internet access</td>
+        </tr>
+        <tr>
+          <td><code>Backup-BitLockerKeyProtector</code></td>
+          <td><span class="badge ad">On-prem AD</span></td>
+          <td>Domain-joined devices with MBAM or Group Policy backup</td>
+          <td>AD write access; schema extended for BitLocker</td>
+        </tr>
+        <tr>
+          <td><code>BackupToMSA-BitLockerKeyProtector</code></td>
+          <td><span class="badge msa">Microsoft Account</span></td>
+          <td>Consumer / personal devices signed in with an MSA</td>
+          <td>Active MSA signed in to Windows; internet access</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn">
+      <strong>Naming quirk</strong>
+      Notice the inconsistency: the AD cmdlet is <code>Backup-BitLockerKeyProtector</code> (with a hyphen and noun), while the AAD and MSA variants use a verb-prefix style (<code>BackupToAAD-</code>, <code>BackupToMSA-</code>). This reflects their different introduction eras and is a common source of confusion.
+    </div>
+
+    <!-- SECTION 2 -->
+    <h2 id="entra">Backup to Entra ID (AAD)</h2>
+
+    <p>This is the most common enterprise scenario for modern, cloud-managed deployments. The key is stored in the device object inside Entra ID and is visible to admins in the Microsoft Entra portal or via Microsoft Intune.</p>
+
+    <h3>Syntax</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">PowerShell</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code><span class="cm"># Get the BitLocker volume</span>
+<span class="var">$vol</span> <span class="op">=</span> <span class="fn">Get-BitLockerVolume</span> <span class="op">-</span>MountPoint <span class="str">"C:"</span>
+
+<span class="cm"># Get the RecoveryPassword protector ID</span>
+<span class="var">$kp</span> <span class="op">=</span> <span class="var">$vol</span>.KeyProtector <span class="op">|</span> <span class="fn">Where-Object</span> { <span class="var">$_</span>.KeyProtectorType <span class="op">-eq</span> <span class="str">'RecoveryPassword'</span> }
+
+<span class="cm"># Back up to Entra ID (AAD)</span>
+<span class="fn">BackupToAAD-BitLockerKeyProtector</span> <span class="op">-</span>MountPoint <span class="str">"C:"</span> <span class="op">-</span>KeyProtectorId <span class="var">$kp</span>.KeyProtectorId</code></pre>
+    </div>
+
+    <div class="callout tip">
+      <strong>Verify in the portal</strong>
+      After running: Entra Admin Center → Devices → All Devices → select device → BitLocker Keys. The key should appear within a few minutes.
+    </div>
+
+    <!-- SECTION 3 -->
+    <h2 id="ad">Backup to On-Premises Active Directory</h2>
+
+    <p>For domain-joined devices without cloud management, the recovery password can be written directly into the computer object in AD DS. This requires the AD schema to have the BitLocker attribute extensions — available from Windows Server 2008 R2 onwards, or via MBAM.</p>
+
+    <h3>Syntax</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">PowerShell</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code><span class="var">$vol</span> <span class="op">=</span> <span class="fn">Get-BitLockerVolume</span> <span class="op">-</span>MountPoint <span class="str">"C:"</span>
+<span class="var">$kp</span>  <span class="op">=</span> <span class="var">$vol</span>.KeyProtector <span class="op">|</span> <span class="fn">Where-Object</span> { <span class="var">$_</span>.KeyProtectorType <span class="op">-eq</span> <span class="str">'RecoveryPassword'</span> }
+
+<span class="cm"># Back up to on-premises Active Directory</span>
+<span class="fn">Backup-BitLockerKeyProtector</span> <span class="op">-</span>MountPoint <span class="str">"C:"</span> <span class="op">-</span>KeyProtectorId <span class="var">$kp</span>.KeyProtectorId</code></pre>
+    </div>
+
+    <div class="callout tip">
+      <strong>Verify in AD</strong>
+      Open ADUC → find the computer object → Properties → BitLocker Recovery tab. If the tab is missing, install the BitLocker Recovery Password Viewer RSAT feature on your admin workstation.
+    </div>
+
+    <!-- SECTION 4 -->
+    <h2 id="msa">Backup to Microsoft Account (MSA)</h2>
+
+    <p>For consumer or personal Windows devices where the user is signed in with a Microsoft Account, the recovery key can be backed up to their account at <a href="https://account.microsoft.com/devices/recoverykey" target="_blank" rel="noopener">account.microsoft.com/devices/recoverykey</a>.</p>
+
+    <h3>Syntax</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">PowerShell</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code><span class="var">$vol</span> <span class="op">=</span> <span class="fn">Get-BitLockerVolume</span> <span class="op">-</span>MountPoint <span class="str">"C:"</span>
+<span class="var">$kp</span>  <span class="op">=</span> <span class="var">$vol</span>.KeyProtector <span class="op">|</span> <span class="fn">Where-Object</span> { <span class="var">$_</span>.KeyProtectorType <span class="op">-eq</span> <span class="str">'RecoveryPassword'</span> }
+
+<span class="cm"># Back up to Microsoft Account</span>
+<span class="fn">BackupToMSA-BitLockerKeyProtector</span> <span class="op">-</span>MountPoint <span class="str">"C:"</span> <span class="op">-</span>KeyProtectorId <span class="var">$kp</span>.KeyProtectorId</code></pre>
+    </div>
+
+    <!-- SECTION 5 -->
+    <h2 id="script">Production Script — AAD Backup with Multi-Key Handling</h2>
+
+    <p>Real-world machines often accumulate multiple <code>RecoveryPassword</code> protectors over time — after OS upgrades, re-imaging, or manual key additions. Blindly backing up all of them adds noise to Entra ID. The script below handles this cleanly: it lets you select which key to back up, backs that one up to Entra ID, and optionally removes the rest.</p>
+
+    <h3>What the script does — step by step</h3>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-icon">1</div>
+        <div class="flow-text"><strong>Input validation</strong> — Accepts a drive letter in either <code>C</code> or <code>C:</code> format, normalises it, and verifies the drive exists before doing anything.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">2</div>
+        <div class="flow-text"><strong>Cmdlet availability check</strong> — Confirms that <code>Get-BitLockerVolume</code>, <code>BackupToAAD-BitLockerKeyProtector</code>, and <code>Remove-BitLockerKeyProtector</code> are all present on the machine. Exits cleanly if any are missing.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">3</div>
+        <div class="flow-text"><strong>Key protector discovery</strong> — Retrieves the BitLocker volume and filters for <code>RecoveryPassword</code> type protectors only.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">4</div>
+        <div class="flow-text"><strong>Single vs. multiple key handling</strong> — If only one recovery key exists, uses it automatically. If multiple exist, lists them and prompts the user to choose one to keep.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">5</div>
+        <div class="flow-text"><strong>Backup to Entra ID</strong> — Calls <code>BackupToAAD-BitLockerKeyProtector</code> with the selected key protector ID. Fails with a clear error if the backup fails.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">6</div>
+        <div class="flow-text"><strong>Cleanup of stale keys</strong> — Lists remaining (unselected) recovery protectors and asks for explicit <code>YES</code> confirmation before removing each one.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">7</div>
+        <div class="flow-text"><strong>Summary output</strong> — Reports which key was kept and backed up, which were removed, and which failed to remove — colour-coded for at-a-glance reading.</div>
+      </div>
+    </div>
+
+    <div class="callout danger">
+      <strong>Warning — key removal is irreversible</strong>
+      Removing a RecoveryPassword protector with <code>Remove-BitLockerKeyProtector</code> is permanent. Always confirm the backup completed successfully in Entra ID before allowing removal. The script does not remove keys without explicit <code>YES</code> confirmation.
+    </div>
+
+    <h3>Full script</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <span class="code-lang">PowerShell — Backup-BitLockerToAAD.ps1</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code><span class="kw">try</span> {
+    <span class="cm"># Prompt user input</span>
+    <span class="var">$driveLetter</span> <span class="op">=</span> <span class="fn">Read-Host</span> <span class="str">"Enter the drive letter (e.g., C or C:)"</span>
+
+    <span class="cm"># Normalize input (convert C -&gt; C:)</span>
+    <span class="kw">if</span> (<span class="var">$driveLetter</span> <span class="op">-match</span> <span class="str">'^[A-Za-z]$'</span>) {
+        <span class="var">$driveLetter</span> <span class="op">=</span> <span class="str">"${driveLetter}:"</span>
+    }
+
+    <span class="cm"># Validate format</span>
+    <span class="kw">if</span> (<span class="var">$driveLetter</span> <span class="op">-notmatch</span> <span class="str">'^[A-Za-z]:$'</span>) {
+        <span class="kw">throw</span> <span class="str">"Invalid drive format. Please enter like C or C:."</span>
+    }
+
+    <span class="cm"># Check if drive exists</span>
+    <span class="kw">if</span> (<span class="op">-not</span> (<span class="fn">Test-Path</span> <span class="var">$driveLetter</span>)) {
+        <span class="kw">throw</span> <span class="str">"Drive $driveLetter does not exist."</span>
+    }
+
+    <span class="cm"># Check required cmdlets</span>
+    <span class="kw">if</span> (<span class="op">-not</span> (<span class="fn">Get-Command</span> Get-BitLockerVolume <span class="op">-ErrorAction</span> SilentlyContinue)) {
+        <span class="kw">throw</span> <span class="str">"Get-BitLockerVolume cmdlet is not available on this system."</span>
+    }
+    <span class="kw">if</span> (<span class="op">-not</span> (<span class="fn">Get-Command</span> BackupToAAD-BitLockerKeyProtector <span class="op">-ErrorAction</span> SilentlyContinue)) {
+        <span class="kw">throw</span> <span class="str">"BackupToAAD-BitLockerKeyProtector cmdlet is not available on this system."</span>
+    }
+    <span class="kw">if</span> (<span class="op">-not</span> (<span class="fn">Get-Command</span> Remove-BitLockerKeyProtector <span class="op">-ErrorAction</span> SilentlyContinue)) {
+        <span class="kw">throw</span> <span class="str">"Remove-BitLockerKeyProtector cmdlet is not available on this system."</span>
+    }
+
+    <span class="cm"># Get BitLocker volume</span>
+    <span class="var">$volume</span> <span class="op">=</span> <span class="fn">Get-BitLockerVolume</span> <span class="op">-</span>MountPoint <span class="var">$driveLetter</span> <span class="op">-ErrorAction</span> Stop
+
+    <span class="kw">if</span> (<span class="var">$null</span> <span class="op">-eq</span> <span class="var">$volume</span>) {
+        <span class="kw">throw</span> <span class="str">"No BitLocker volume information found for $driveLetter."</span>
+    }
+
+    <span class="cm"># Filter only RecoveryPassword protectors</span>
+    <span class="var">$recoveryKPs</span> <span class="op">=</span> <span class="op">@</span>(<span class="var">$volume</span>.KeyProtector <span class="op">|</span> <span class="fn">Where-Object</span> {
+        <span class="var">$_</span>.KeyProtectorType <span class="op">-eq</span> <span class="str">'RecoveryPassword'</span>
+    })
+
+    <span class="kw">if</span> (<span class="op">-not</span> <span class="var">$recoveryKPs</span> <span class="op">-or</span> <span class="var">$recoveryKPs</span>.Count <span class="op">-eq</span> <span class="num">0</span>) {
+        <span class="kw">throw</span> <span class="str">"No RecoveryPassword protector found on $driveLetter."</span>
+    }
+
+    <span class="var">$selectedKP</span> <span class="op">=</span> <span class="var">$null</span>
+
+    <span class="kw">if</span> (<span class="var">$recoveryKPs</span>.Count <span class="op">-eq</span> <span class="num">1</span>) {
+        <span class="var">$selectedKP</span> <span class="op">=</span> <span class="var">$recoveryKPs</span>[<span class="num">0</span>]
+        <span class="fn">Write-Host</span> <span class="str">"Only one RecoveryPassword protector found. It will be used."</span> <span class="op">-ForegroundColor</span> Cyan
+        <span class="fn">Write-Host</span> <span class="str">"Selected KeyProtectorId: $($selectedKP.KeyProtectorId)"</span> <span class="op">-ForegroundColor</span> Cyan
+    }
+    <span class="kw">else</span> {
+        <span class="fn">Write-Host</span> <span class="str">""</span>
+        <span class="fn">Write-Host</span> <span class="str">"Multiple RecoveryPassword protectors found on $driveLetter"</span> <span class="op">-ForegroundColor</span> Yellow
+
+        <span class="kw">for</span> (<span class="var">$i</span> <span class="op">=</span> <span class="num">0</span>; <span class="var">$i</span> <span class="op">-lt</span> <span class="var">$recoveryKPs</span>.Count; <span class="var">$i</span><span class="op">++</span>) {
+            <span class="fn">Write-Host</span> (<span class="str">"[{0}] {1}"</span> <span class="op">-f</span> (<span class="var">$i</span> <span class="op">+</span> <span class="num">1</span>), <span class="var">$recoveryKPs</span>[<span class="var">$i</span>].KeyProtectorId)
+        }
+
+        <span class="kw">do</span> {
+            <span class="var">$selection</span> <span class="op">=</span> <span class="fn">Read-Host</span> <span class="str">"Enter the number of the RecoveryPassword protector to back up and keep"</span>
+            <span class="var">$validSelection</span> <span class="op">=</span> <span class="var">$selection</span> <span class="op">-match</span> <span class="str">'^\d+$'</span> <span class="op">-and</span>
+                              [<span class="kw">int</span>]<span class="var">$selection</span> <span class="op">-ge</span> <span class="num">1</span> <span class="op">-and</span>
+                              [<span class="kw">int</span>]<span class="var">$selection</span> <span class="op">-le</span> <span class="var">$recoveryKPs</span>.Count
+
+            <span class="kw">if</span> (<span class="op">-not</span> <span class="var">$validSelection</span>) {
+                <span class="fn">Write-Host</span> <span class="str">"Invalid selection. Please enter a number between 1 and $($recoveryKPs.Count)."</span> <span class="op">-ForegroundColor</span> Red
+            }
+        } <span class="kw">until</span> (<span class="var">$validSelection</span>)
+
+        <span class="var">$selectedKP</span> <span class="op">=</span> <span class="var">$recoveryKPs</span>[[<span class="kw">int</span>]<span class="var">$selection</span> <span class="op">-</span> <span class="num">1</span>]
+        <span class="fn">Write-Host</span> <span class="str">""</span>
+        <span class="fn">Write-Host</span> <span class="str">"Selected KeyProtectorId: $($selectedKP.KeyProtectorId)"</span> <span class="op">-ForegroundColor</span> Cyan
+    }
+
+    <span class="cm"># Backup selected protector to AAD</span>
+    <span class="fn">Write-Host</span> <span class="str">""</span>
+    <span class="fn">Write-Host</span> <span class="str">"Backing up selected RecoveryPassword protector to AAD..."</span> <span class="op">-ForegroundColor</span> Cyan
+
+    <span class="fn">BackupToAAD-BitLockerKeyProtector</span> <span class="op">`</span>
+        <span class="op">-</span>MountPoint <span class="var">$driveLetter</span> <span class="op">`</span>
+        <span class="op">-</span>KeyProtectorId <span class="var">$selectedKP</span>.KeyProtectorId <span class="op">`</span>
+        <span class="op">-ErrorAction</span> Stop
+
+    <span class="fn">Write-Host</span> <span class="str">"Backup to AAD completed successfully for KeyProtectorId: $($selectedKP.KeyProtectorId)"</span> <span class="op">-ForegroundColor</span> Green
+
+    <span class="cm"># Identify other recovery protectors</span>
+    <span class="var">$otherRecoveryKPs</span> <span class="op">=</span> <span class="op">@</span>(<span class="var">$recoveryKPs</span> <span class="op">|</span> <span class="fn">Where-Object</span> {
+        <span class="var">$_</span>.KeyProtectorId <span class="op">-ne</span> <span class="var">$selectedKP</span>.KeyProtectorId
+    })
+
+    <span class="kw">if</span> (<span class="var">$otherRecoveryKPs</span>.Count <span class="op">-gt</span> <span class="num">0</span>) {
+        <span class="fn">Write-Host</span> <span class="str">""</span>
+        <span class="fn">Write-Host</span> <span class="str">"The following RecoveryPassword protector(s) are not selected and can be removed:"</span> <span class="op">-ForegroundColor</span> Yellow
+        <span class="kw">foreach</span> (<span class="var">$kp</span> <span class="kw">in</span> <span class="var">$otherRecoveryKPs</span>) {
+            <span class="fn">Write-Host</span> <span class="str">" - $($kp.KeyProtectorId)"</span>
+        }
+
+        <span class="var">$confirmRemoval</span> <span class="op">=</span> <span class="fn">Read-Host</span> <span class="str">"Type YES to remove the above RecoveryPassword protector(s), or anything else to keep them"</span>
+
+        <span class="kw">if</span> (<span class="var">$confirmRemoval</span> <span class="op">-eq</span> <span class="str">'YES'</span>) {
+            <span class="var">$removedIds</span> <span class="op">=</span> <span class="op">@</span>()
+            <span class="var">$failedIds</span>  <span class="op">=</span> <span class="op">@</span>()
+
+            <span class="kw">foreach</span> (<span class="var">$kp</span> <span class="kw">in</span> <span class="var">$otherRecoveryKPs</span>) {
+                <span class="kw">try</span> {
+                    <span class="fn">Remove-BitLockerKeyProtector</span> <span class="op">`</span>
+                        <span class="op">-</span>MountPoint <span class="var">$driveLetter</span> <span class="op">`</span>
+                        <span class="op">-</span>KeyProtectorId <span class="var">$kp</span>.KeyProtectorId <span class="op">`</span>
+                        <span class="op">-ErrorAction</span> Stop
+
+                    <span class="var">$removedIds</span> <span class="op">+=</span> <span class="var">$kp</span>.KeyProtectorId
+                    <span class="fn">Write-Host</span> <span class="str">"Removed KeyProtectorId: $($kp.KeyProtectorId)"</span> <span class="op">-ForegroundColor</span> Green
+                }
+                <span class="kw">catch</span> {
+                    <span class="var">$failedIds</span> <span class="op">+=</span> <span class="var">$kp</span>.KeyProtectorId
+                    <span class="fn">Write-Host</span> <span class="str">"Failed to remove KeyProtectorId: $($kp.KeyProtectorId). Error: $($_.Exception.Message)"</span> <span class="op">-ForegroundColor</span> Red
+                }
+            }
+
+            <span class="fn">Write-Host</span> <span class="str">""</span>
+            <span class="fn">Write-Host</span> <span class="str">"Removal summary:"</span> <span class="op">-ForegroundColor</span> Cyan
+            <span class="fn">Write-Host</span> <span class="str">" Kept and backed up : $($selectedKP.KeyProtectorId)"</span>
+
+            <span class="kw">if</span> (<span class="var">$removedIds</span>.Count <span class="op">-gt</span> <span class="num">0</span>) {
+                <span class="fn">Write-Host</span> <span class="str">" Removed            : $($removedIds -join ', ')"</span> <span class="op">-ForegroundColor</span> Green
+            }
+            <span class="kw">if</span> (<span class="var">$failedIds</span>.Count <span class="op">-gt</span> <span class="num">0</span>) {
+                <span class="fn">Write-Host</span> <span class="str">" Failed to remove   : $($failedIds -join ', ')"</span> <span class="op">-ForegroundColor</span> Red
+            }
+        }
+        <span class="kw">else</span> {
+            <span class="fn">Write-Host</span> <span class="str">"Removal skipped. Other RecoveryPassword protector(s) were not removed."</span> <span class="op">-ForegroundColor</span> Yellow
+        }
+    }
+    <span class="kw">else</span> {
+        <span class="fn">Write-Host</span> <span class="str">"No extra RecoveryPassword protectors found to remove."</span> <span class="op">-ForegroundColor</span> Green
+    }
+}
+<span class="kw">catch</span> {
+    <span class="fn">Write-Host</span> <span class="str">""</span>
+    <span class="fn">Write-Host</span> <span class="str">"Error: $($_.Exception.Message)"</span> <span class="op">-ForegroundColor</span> Red
+}</code></pre>
+    </div>
+
+    <!-- SECTION 6 -->
+    <h2 id="when">When to Use Which Backup Destination</h2>
+
+    <ul>
+      <li><strong>Entra ID</strong> — Default choice for any modern managed device enrolled in Intune or joined to Entra. Keys are visible to admins without needing RSAT or AD access.</li>
+      <li><strong>On-prem AD</strong> — Use when devices are domain-joined and you have MBAM or GPO-enforced key backup. Necessary for air-gapped or hybrid environments without cloud management.</li>
+      <li><strong>MSA</strong> — Appropriate only for consumer Windows Home/Pro devices where a Microsoft Account is the primary identity. Not suitable for enterprise deployments.</li>
+    </ul>
+
+    <div class="callout tip">
+      <strong>Hybrid environments</strong>
+      For hybrid AD-joined devices (joined to both on-prem AD and Entra ID), you can run both <code>Backup-BitLockerKeyProtector</code> and <code>BackupToAAD-BitLockerKeyProtector</code> to ensure the key lands in both places. Back up to AAD first, verify, then back up to AD.
+    </div>
+
+    <!-- SECTION 7 -->
+    <h2 id="troubleshooting">Common Issues &amp; Fixes</h2>
+
+    <table class="cmp-table">
+      <thead>
+        <tr><th>Error</th><th>Likely Cause</th><th>Fix</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>BackupToAAD-... is not recognised</code></td>
+          <td>Windows version too old or cmdlet not loaded</td>
+          <td>Requires Windows 10 1703+ with <code>BitLocker</code> module. Run <code>Import-Module BitLocker</code> first.</td>
+        </tr>
+        <tr>
+          <td>Backup succeeds but key not visible in Entra portal</td>
+          <td>Device not registered / replication delay</td>
+          <td>Confirm device is Entra-joined with <code>dsregcmd /status</code>. Wait up to 15 minutes for replication.</td>
+        </tr>
+        <tr>
+          <td><code>Access denied</code> on AD backup</td>
+          <td>Computer object lacks write permissions to msTPM-OwnerInformation attribute</td>
+          <td>Check AD delegation for BitLocker key backup; verify via MBAM or GPO <em>Store BitLocker recovery information in AD DS</em>.</td>
+        </tr>
+        <tr>
+          <td>No <code>RecoveryPassword</code> protector found</td>
+          <td>BitLocker enabled with TPM-only, no recovery password added</td>
+          <td>Run <code>Add-BitLockerKeyProtector -MountPoint C: -RecoveryPasswordProtector</code> to generate one first.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="post-nav">
+      <span style="color:var(--b200); font-size:12px; letter-spacing:.08em; text-transform:uppercase;">← Previous</span>
+      <a href="post-002-coming-soon.html">Note 02 — Coming soon →</a>
+    </div>
+
+  </article>
+</main>
+
+<!-- SIDEBAR -->
+<aside class="side-col">
+
+  <div class="side-section">
+    <div class="side-label">On this page</div>
+    <nav class="toc-links">
+      <a href="#cmdlets">The three cmdlets</a>
+      <a href="#entra">Backup to Entra ID</a>
+      <a href="#ad">Backup to AD</a>
+      <a href="#msa">Backup to MSA</a>
+      <a href="#script">Production script</a>
+      <a href="#when">When to use which</a>
+      <a href="#troubleshooting">Troubleshooting</a>
+    </nav>
+  </div>
+
+  <div class="side-section">
+    <div class="side-label">All Notes</div>
+    <ul class="side-links">
+      <li><a href="post-001-bitlocker-backup.html"><span class="snum">01</span><span>BitLocker Backup</span></a></li>
+      <li style="opacity:.5"><a href="post-002-coming-soon.html"><span class="snum">02</span><span>Coming soon</span></a></li>
+      <li style="opacity:.5"><a href="post-003-coming-soon.html"><span class="snum">03</span><span>Coming soon</span></a></li>
+    </ul>
+  </div>
+
+  <div class="side-section">
+    <div class="side-label">Related</div>
+    <ul class="side-links">
+      <li><a href="https://learn.microsoft.com/en-us/powershell/module/bitlocker/" target="_blank" rel="noopener"><span class="snum">↗</span><span>BitLocker PS Docs</span></a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/active-directory/devices/device-management-azure-portal" target="_blank" rel="noopener"><span class="snum">↗</span><span>Entra Device Mgmt</span></a></li>
+      <li><a href="https://github.com/harty1193" target="_blank" rel="noopener"><span class="snum">↗</span><span>GitHub</span></a></li>
+    </ul>
+  </div>
+
+</aside>
+</div>
+
+<footer>
+  <span class="footer-text">© 2026 Hrudananda Das</span>
+  <div class="footer-links">
+    <a href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/harty1193" target="_blank" rel="noopener">GitHub</a>
+    <a href="/feed.xml">RSS</a>
+  </div>
+</footer>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+</script>
+
+</body>
+</html>

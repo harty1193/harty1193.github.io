@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Windows & Security Notes — Hrudananda Das</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --b50:#e6f1fb; --b100:#b5d4f4; --b200:#85b7eb;
+      --b400:#378add; --b600:#185fa5; --b800:#0c447c; --b900:#042c53;
+      --font:'Courier Prime','Courier New',Courier,monospace;
+    }
+    html { scroll-behavior:smooth; }
+    body { font-family:var(--font); background:#f5f8fc; color:var(--b900); min-height:100vh; display:flex; flex-direction:column; }
+
+    /* NAV */
+    nav.topnav { padding:1.8rem 2.5rem; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--b100); }
+    .nav-logo { font-size:13px; letter-spacing:.12em; color:var(--b600); text-decoration:none; font-weight:700; text-transform:uppercase; }
+    .nav-links { display:flex; gap:2rem; list-style:none; }
+    .nav-links a { font-size:12px; letter-spacing:.1em; color:var(--b400); text-decoration:none; text-transform:uppercase; }
+    .nav-links a:hover, .nav-links a.active { color:var(--b900); }
+
+    /* LAYOUT */
+    .layout { display:grid; grid-template-columns:1fr 220px; gap:0; flex:1; }
+    .main-col { padding:3rem 3rem 4rem 2.5rem; border-right:1px solid var(--b100); }
+    .side-col { padding:3rem 2rem 4rem; }
+
+    /* BACK */
+    .back { font-size:12px; letter-spacing:.12em; color:var(--b400); text-decoration:none; text-transform:uppercase; display:inline-block; margin-bottom:2rem; }
+    .back:hover { color:var(--b900); }
+
+    /* PAGE HEADER */
+    .page-header { margin-bottom:3rem; }
+    .page-header h1 { font-size:clamp(20px,3.5vw,32px); font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--b900); margin-bottom:.4rem; }
+    .page-header .subtitle { font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--b200); }
+
+    /* POST CARD */
+    .post-card { display:grid; grid-template-columns:70px 1fr; gap:0 1.5rem; margin-bottom:2.5rem; padding-bottom:2.5rem; border-bottom:1px solid var(--b100); }
+    .post-card:last-child { border-bottom:none; }
+    .post-num { font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--b200); padding-top:3px; }
+    .post-body {}
+    .post-tags { display:flex; flex-wrap:wrap; gap:.3rem .5rem; margin-bottom:.55rem; }
+    .ptag { font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--b600); background:var(--b50); border:1px solid var(--b100); padding:2px 7px; border-radius:1px; }
+    .ptag.future { color:var(--b200); background:transparent; border-color:#ddeaf6; font-style:italic; }
+    .post-body h2 { font-size:15px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--b900); margin-bottom:.3rem; line-height:1.3; }
+    .post-body h2 a { color:inherit; text-decoration:none; }
+    .post-body h2 a:hover { color:var(--b600); }
+    .post-body .post-meta { font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--b200); margin-bottom:.55rem; }
+    .post-body .excerpt { font-size:13px; line-height:1.75; color:var(--b600); }
+    .post-body .read-more { display:inline-block; margin-top:.7rem; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--b400); text-decoration:none; }
+    .post-body .read-more:hover { color:var(--b900); }
+    .post-card.stub { opacity:.55; }
+    .post-card.stub .post-body h2 { color:var(--b200); }
+
+    /* SIDEBAR */
+    .side-section { margin-bottom:2.5rem; }
+    .side-label { font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--b200); margin-bottom:1rem; padding-bottom:.4rem; border-bottom:1px solid var(--b100); }
+    .side-links { list-style:none; display:flex; flex-direction:column; gap:.5rem; }
+    .side-links a { font-size:12px; letter-spacing:.06em; color:var(--b400); text-decoration:none; text-transform:uppercase; display:flex; align-items:baseline; gap:.5rem; }
+    .side-links a:hover { color:var(--b900); }
+    .side-links .snum { font-size:10px; color:var(--b200); min-width:18px; }
+    .side-links .stitle { flex:1; }
+    .side-links li.stub a { color:var(--b200); }
+    .side-links li.stub a:hover { color:var(--b400); }
+    .side-tags { display:flex; flex-wrap:wrap; gap:.4rem; }
+    .side-tag { font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--b600); background:var(--b50); border:1px solid var(--b100); padding:2px 8px; border-radius:1px; cursor:default; }
+
+    /* FOOTER */
+    footer { padding:1.4rem 2.5rem; border-top:1px solid var(--b100); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.5rem; }
+    .footer-text { font-size:11px; letter-spacing:.1em; color:var(--b200); text-transform:uppercase; }
+    .footer-links { display:flex; gap:1.5rem; }
+    .footer-links a { font-size:11px; letter-spacing:.1em; color:var(--b400); text-decoration:none; text-transform:uppercase; }
+    .footer-links a:hover { color:var(--b600); }
+
+    /* RESPONSIVE */
+    @media(max-width:700px){
+      .layout{grid-template-columns:1fr;}
+      .main-col{padding:2rem 1.5rem; border-right:none; border-bottom:1px solid var(--b100);}
+      .side-col{padding:2rem 1.5rem;}
+    }
+
+    /* DARK */
+    @media(prefers-color-scheme:dark){
+      body{background:#050e1a;color:#b5d4f4;}
+      nav.topnav,footer,.main-col,.side-col,.post-card{border-color:#0c3055;}
+      .nav-logo{color:#85b7eb;}
+      .nav-links a,.back,.footer-links a,.post-body .read-more,.side-links a{color:#378add;}
+      .nav-links a:hover,.nav-links a.active,.back:hover,.footer-links a:hover,.post-body .read-more:hover,.side-links a:hover{color:#b5d4f4;}
+      .page-header h1,.post-body h2{color:#b5d4f4;}
+      .page-header .subtitle,.post-num,.post-body .post-meta,.side-label,.side-links .snum{color:#185fa5;}
+      .post-body .excerpt{color:#378add;}
+      .ptag{background:#0c3055;border-color:#185fa5;color:#85b7eb;}
+      .ptag.future{background:transparent;border-color:#0c3055;color:#185fa5;}
+      .side-tag{background:#0c3055;border-color:#185fa5;color:#85b7eb;}
+      .side-section .side-label{border-color:#0c3055;}
+      .post-card.stub .post-body h2{color:#185fa5;}
+      .side-links li.stub a{color:#185fa5;}
+      .footer-text{color:#185fa5;}
+    }
+  </style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="nav-logo" href="index.html">H.DAS</a>
+  <ul class="nav-links">
+    <li><a href="notes.html" class="active">Blog</a></li>
+    <li><a href="whoami.html">About</a></li>
+    <li><a href="https://github.com/harty1193" target="_blank" rel="noopener">GitHub</a></li>
+  </ul>
+</nav>
+
+<div class="layout">
+  <main class="main-col">
+    <a class="back" href="index.html">← Back</a>
+
+    <div class="page-header">
+      <h1>Windows &amp; Security Notes</h1>
+      <p class="subtitle">Field notes from 10+ years on the escalation floor</p>
+    </div>
+
+    <!-- POST 01 -->
+    <div class="post-card">
+      <div class="post-num">01</div>
+      <div class="post-body">
+        <div class="post-tags">
+          <span class="ptag">BitLocker</span>
+          <span class="ptag">PowerShell</span>
+          <span class="ptag">Entra ID</span>
+          <span class="ptag">AD</span>
+          <span class="ptag">MSA</span>
+        </div>
+        <h2><a href="post-001-bitlocker-backup.html">Automating BitLocker Recovery Key Backup to the Cloud</a></h2>
+        <div class="post-meta">June 2026 &nbsp;·&nbsp; 8 min read</div>
+        <p class="excerpt">Most BitLocker deployments skip the step that matters most — ensuring the recovery password actually lands somewhere retrievable. This post covers all three backup destinations: Entra ID (AAD), on-premises Active Directory, and Microsoft Account (MSA), with a production-ready PowerShell script that handles multiple key protectors, cleans up stale keys, and fails gracefully.</p>
+        <a class="read-more" href="post-001-bitlocker-backup.html">Read note →</a>
+      </div>
+    </div>
+
+    <!-- POST 02 — STUB -->
+    <div class="post-card stub">
+      <div class="post-num">02</div>
+      <div class="post-body">
+        <div class="post-tags">
+          <span class="ptag future">Coming soon</span>
+        </div>
+        <h2><a href="post-002-coming-soon.html">Note #02 — Reserved for future post</a></h2>
+        <div class="post-meta">— &nbsp;·&nbsp; Draft</div>
+        <p class="excerpt">This slot is reserved. Add your next Windows or security topic here.</p>
+        <a class="read-more" href="post-002-coming-soon.html">Placeholder →</a>
+      </div>
+    </div>
+
+    <!-- POST 03 — STUB -->
+    <div class="post-card stub">
+      <div class="post-num">03</div>
+      <div class="post-body">
+        <div class="post-tags">
+          <span class="ptag future">Coming soon</span>
+        </div>
+        <h2><a href="post-003-coming-soon.html">Note #03 — Reserved for future post</a></h2>
+        <div class="post-meta">— &nbsp;·&nbsp; Draft</div>
+        <p class="excerpt">This slot is reserved. Add your next Windows or security topic here.</p>
+        <a class="read-more" href="post-003-coming-soon.html">Placeholder →</a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside class="side-col">
+
+    <div class="side-section">
+      <div class="side-label">All Notes</div>
+      <ul class="side-links">
+        <li>
+          <a href="post-001-bitlocker-backup.html">
+            <span class="snum">01</span>
+            <span class="stitle">BitLocker Recovery Backup</span>
+          </a>
+        </li>
+        <li class="stub">
+          <a href="post-002-coming-soon.html">
+            <span class="snum">02</span>
+            <span class="stitle">Coming soon</span>
+          </a>
+        </li>
+        <li class="stub">
+          <a href="post-003-coming-soon.html">
+            <span class="snum">03</span>
+            <span class="stitle">Coming soon</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="side-section">
+      <div class="side-label">Topics</div>
+      <div class="side-tags">
+        <span class="side-tag">BitLocker</span>
+        <span class="side-tag">PowerShell</span>
+        <span class="side-tag">Autopilot</span>
+        <span class="side-tag">Intune</span>
+        <span class="side-tag">WDAC</span>
+        <span class="side-tag">Entra ID</span>
+        <span class="side-tag">Windows</span>
+        <span class="side-tag">Azure</span>
+      </div>
+    </div>
+
+    <div class="side-section">
+      <div class="side-label">Links</div>
+      <ul class="side-links">
+        <li><a href="https://github.com/harty1193" target="_blank" rel="noopener"><span class="snum">↗</span><span class="stitle">GitHub</span></a></li>
+        <li><a href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener"><span class="snum">↗</span><span class="stitle">LinkedIn</span></a></li>
+        <li><a href="whoami.html"><span class="snum">→</span><span class="stitle">About me</span></a></li>
+      </ul>
+    </div>
+
+  </aside>
+</div>
+
+<footer>
+  <span class="footer-text">© 2026 Hrudananda Das</span>
+  <div class="footer-links">
+    <a href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/harty1193" target="_blank" rel="noopener">GitHub</a>
+    <a href="/feed.xml">RSS</a>
+  </div>
+</footer>
+
+</body>
+</html>
