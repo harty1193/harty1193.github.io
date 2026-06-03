@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Hrudananda Das</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --b50:#e6f1fb; --b100:#b5d4f4; --b200:#85b7eb;
+      --b400:#378add; --b600:#185fa5; --b800:#0c447c; --b900:#042c53;
+      --font:'Courier Prime','Courier New',Courier,monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: #f5f8fc; color: var(--b900); min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* NAV */
+    nav.topnav { padding: 1.8rem 2.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--b100); }
+    .nav-logo { font-size: 13px; letter-spacing: .12em; color: var(--b600); text-decoration: none; font-weight: 700; text-transform: uppercase; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: 12px; letter-spacing: .1em; color: var(--b400); text-decoration: none; text-transform: uppercase; }
+    .nav-links a:hover, .nav-links a.active { color: var(--b900); }
+
+    /* LAYOUT */
+    .page { flex: 1; display: grid; grid-template-columns: 1fr 220px; gap: 0; }
+    .main-col { padding: 3rem 3rem 5rem 2.5rem; border-right: 1px solid var(--b100); }
+    .side-col  { padding: 3rem 2rem 4rem; }
+
+    .back { font-size: 12px; letter-spacing: .12em; color: var(--b400); text-decoration: none; text-transform: uppercase; display: inline-block; margin-bottom: 2rem; }
+    .back:hover { color: var(--b900); }
+
+    .page-header { margin-bottom: 2.8rem; padding-bottom: 1.6rem; border-bottom: 1px solid var(--b100); }
+    .page-header h1 { font-size: clamp(20px,3.5vw,30px); font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--b900); margin-bottom: .3rem; }
+    .page-header .subtitle { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--b200); }
+
+    /* DIRECT CONTACT STRIP */
+    .direct-strip {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      margin-bottom: 2.8rem;
+    }
+    .direct-card {
+      flex: 1; min-width: 180px;
+      border: 1px solid var(--b100);
+      padding: 1rem 1.2rem;
+      border-radius: 2px;
+      background: var(--b50);
+      text-decoration: none;
+      display: flex; flex-direction: column; gap: .3rem;
+      transition: border-color .15s;
+    }
+    .direct-card:hover { border-color: var(--b400); }
+    .direct-card .dc-label { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--b200); }
+    .direct-card .dc-value { font-size: 13px; letter-spacing: .04em; color: var(--b600); font-weight: 700; }
+    .direct-card .dc-arrow { font-size: 11px; color: var(--b400); margin-top: .2rem; }
+
+    /* SECTION LABEL */
+    .sec-label { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--b200); margin-bottom: 1.4rem; padding-bottom: .45rem; border-bottom: 1px solid var(--b100); }
+
+    /* FORM */
+    .contact-form { max-width: 560px; }
+    .field { margin-bottom: 1.6rem; }
+    .field label { display: block; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--b600); margin-bottom: .5rem; }
+    .field input, .field textarea {
+      width: 100%;
+      font-family: var(--font);
+      font-size: 13px;
+      letter-spacing: .03em;
+      color: var(--b900);
+      background: #fff;
+      border: 1px solid var(--b100);
+      padding: .65rem .9rem;
+      border-radius: 2px;
+      outline: none;
+      transition: border-color .15s;
+      resize: vertical;
+    }
+    .field input:focus, .field textarea:focus { border-color: var(--b400); }
+    .field textarea { min-height: 140px; }
+    .field .hint { font-size: 11px; color: var(--b200); letter-spacing: .04em; margin-top: .35rem; font-style: italic; }
+
+    /* CHARACTER COUNTER */
+    .char-counter { font-size: 10px; color: var(--b200); letter-spacing: .08em; text-align: right; margin-top: .25rem; }
+
+    /* SUBMIT */
+    .submit-row { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; margin-top: .4rem; }
+    .btn-submit {
+      font-family: var(--font);
+      font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+      color: #fff; background: var(--b600);
+      border: 1px solid var(--b600);
+      padding: .65rem 1.6rem;
+      border-radius: 2px; cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+    .btn-submit:hover { background: var(--b800); border-color: var(--b800); }
+    .btn-submit:disabled { background: var(--b200); border-color: var(--b200); cursor: not-allowed; }
+    .submit-note { font-size: 11px; color: var(--b200); letter-spacing: .06em; font-style: italic; }
+
+    /* STATUS MESSAGES */
+    .status-msg {
+      display: none; margin-top: 1.4rem;
+      padding: .9rem 1.1rem; border-left: 3px solid;
+      font-size: 13px; line-height: 1.7; border-radius: 0 2px 2px 0;
+    }
+    .status-msg.success { border-color: #1a7a4a; background: #e8f7ef; color: #1a5c2e; }
+    .status-msg.error   { border-color: #c0392b; background: #fdf0f0; color: #8b1a1a; }
+    .status-msg.loading { border-color: var(--b400); background: var(--b50); color: var(--b600); }
+
+    /* SETUP NOTICE */
+    .setup-notice {
+      border: 1px dashed var(--b100); padding: 1rem 1.2rem;
+      border-radius: 2px; margin-bottom: 2rem;
+      font-size: 12px; line-height: 1.75; color: var(--b600); letter-spacing: .03em;
+    }
+    .setup-notice strong { display: block; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--b400); margin-bottom: .4rem; }
+    .setup-notice code { font-family: var(--font); font-size: 11px; background: var(--b50); border: 1px solid var(--b100); padding: 1px 5px; border-radius: 1px; color: var(--b800); }
+
+    /* SIDEBAR */
+    .side-section { margin-bottom: 2.5rem; }
+    .side-label { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--b200); margin-bottom: 1rem; padding-bottom: .4rem; border-bottom: 1px solid var(--b100); }
+    .side-links { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+    .side-links a { font-size: 12px; letter-spacing: .06em; color: var(--b400); text-decoration: none; text-transform: uppercase; display: flex; align-items: baseline; gap: .5rem; }
+    .side-links a:hover { color: var(--b900); }
+    .side-links .snum { font-size: 10px; color: var(--b200); min-width: 18px; }
+    .side-note { font-size: 12px; line-height: 1.7; color: var(--b600); letter-spacing: .03em; }
+
+    /* FOOTER */
+    footer { padding: 1.4rem 2.5rem; border-top: 1px solid var(--b100); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5rem; }
+    .footer-text { font-size: 11px; letter-spacing: .1em; color: var(--b200); text-transform: uppercase; }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { font-size: 11px; letter-spacing: .1em; color: var(--b400); text-decoration: none; text-transform: uppercase; }
+    .footer-links a:hover { color: var(--b600); }
+
+    @media(max-width:700px){
+      .page { grid-template-columns: 1fr; }
+      .main-col { padding: 2rem 1.5rem; border-right: none; border-bottom: 1px solid var(--b100); }
+      .side-col { padding: 2rem 1.5rem; }
+    }
+    @media(prefers-color-scheme:dark){
+      body { background: #050e1a; color: #b5d4f4; }
+      nav.topnav, footer, .main-col, .page-header { border-color: #0c3055; }
+      .nav-logo { color: #85b7eb; }
+      .nav-links a, .back, .footer-links a { color: #378add; }
+      .nav-links a:hover, .nav-links a.active, .back:hover, .footer-links a:hover { color: #b5d4f4; }
+      .page-header h1 { color: #b5d4f4; }
+      .page-header .subtitle, .sec-label, .side-label { color: #185fa5; }
+      .direct-card { background: #0c3055; border-color: #185fa5; }
+      .direct-card:hover { border-color: #378add; }
+      .direct-card .dc-label { color: #185fa5; }
+      .direct-card .dc-value { color: #85b7eb; }
+      .direct-card .dc-arrow { color: #378add; }
+      .field label { color: #378add; }
+      .field input, .field textarea { background: #041e38; border-color: #185fa5; color: #b5d4f4; }
+      .field input:focus, .field textarea:focus { border-color: #378add; }
+      .field .hint, .char-counter, .submit-note { color: #185fa5; }
+      .btn-submit { background: #185fa5; border-color: #185fa5; }
+      .btn-submit:hover { background: #378add; border-color: #378add; }
+      .btn-submit:disabled { background: #0c3055; border-color: #0c3055; color: #185fa5; }
+      .status-msg.success { background: #041e0f; color: #4ab87a; border-color: #1a7a4a; }
+      .status-msg.error   { background: #1a0505; color: #d45c5c; border-color: #8b1a1a; }
+      .status-msg.loading { background: #041e38; color: #85b7eb; border-color: #378add; }
+      .setup-notice { border-color: #0c3055; color: #378add; }
+      .setup-notice strong { color: #378add; }
+      .setup-notice code { background: #0c3055; border-color: #185fa5; color: #85b7eb; }
+      .side-section .side-label { border-color: #0c3055; }
+      .side-links a { color: #378add; }
+      .side-links a:hover { color: #b5d4f4; }
+      .side-note { color: #378add; }
+      .footer-text { color: #185fa5; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="nav-logo" href="index.html">H.DAS</a>
+  <ul class="nav-links">
+    <li><a href="notes.html">Blog</a></li>
+    <li><a href="whoami.html">About</a></li>
+    <li><a href="certifications.html">Certs</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+    <li><a href="https://github.com/harty1193" target="_blank" rel="noopener">GitHub</a></li>
+  </ul>
+</nav>
+
+<div class="page">
+<main class="main-col">
+
+  <a class="back" href="index.html">← Back</a>
+
+  <div class="page-header">
+    <h1>Contact Me</h1>
+    <p class="subtitle">Drop a message — I'll reply within a day or two</p>
+  </div>
+
+  <!-- DIRECT CONTACT CARDS -->
+  <div class="direct-strip">
+    <a class="direct-card" href="mailto:hrudananda.das@proton.me">
+      <span class="dc-label">Email (ProtonMail)</span>
+      <span class="dc-value">hrudananda.das@proton.me</span>
+      <span class="dc-arrow">Send email →</span>
+    </a>
+    <a class="direct-card" href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener">
+      <span class="dc-label">LinkedIn</span>
+      <span class="dc-value">linkedin.com/in/harty1193</span>
+      <span class="dc-arrow">Connect ↗</span>
+    </a>
+    <a class="direct-card" href="https://github.com/harty1193" target="_blank" rel="noopener">
+      <span class="dc-label">GitHub</span>
+      <span class="dc-value">github.com/harty1193</span>
+      <span class="dc-arrow">Follow ↗</span>
+    </a>
+  </div>
+
+  <!-- FORM SECTION -->
+  <div class="sec-label">Or send a message via the form below</div>
+
+  <!-- SETUP NOTICE — remove after Apps Script is wired up -->
+
+  <div class="contact-form">
+    <div class="field">
+      <label for="senderEmail">Your Email Address *</label>
+      <input type="email" id="senderEmail" name="senderEmail" placeholder="you@example.com" required autocomplete="email">
+    </div>
+
+    <div class="field">
+      <label for="subject">Subject *</label>
+      <input type="text" id="subject" name="subject" placeholder="What's this about?" required maxlength="120">
+      <div class="char-counter"><span id="subjectCount">0</span> / 120</div>
+    </div>
+
+    <div class="field">
+      <label for="body">Message *</label>
+      <textarea id="body" name="body" placeholder="Write your message here..." required maxlength="2000"></textarea>
+      <div class="char-counter"><span id="bodyCount">0</span> / 2000</div>
+      <div class="hint">Plain text only. No attachments — use the email link above if you need to send files.</div>
+    </div>
+
+    <div class="submit-row">
+      <button class="btn-submit" id="submitBtn" onclick="submitForm()">Send Message →</button>
+      <!--span class="submit-note">Goes to your spreadsheet + a copy to ProtonMail</span-->
+    </div>
+
+    <div class="status-msg" id="statusMsg"></div>
+  </div>
+
+</main>
+
+<!-- SIDEBAR -->
+<aside class="side-col">
+
+  <div class="side-section">
+    <div class="side-label">Reach me directly</div>
+    <ul class="side-links">
+      <li><a href="mailto:hrudananda.das@proton.me"><span class="snum">✉</span><span>ProtonMail</span></a></li>
+      <li><a href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener"><span class="snum">↗</span><span>LinkedIn</span></a></li>
+      <li><a href="https://github.com/harty1193" target="_blank" rel="noopener"><span class="snum">↗</span><span>GitHub</span></a></li>
+    </ul>
+  </div>
+
+  <!--div class="side-section">
+    <div class="side-label">Spreadsheet setup</div>
+    <p class="side-note">
+      To wire the form to your Google Sheet:
+      <br><br>
+      1. Open your Sheet → Extensions → Apps Script
+      <br><br>
+      2. Paste the <strong>Apps Script code</strong> from <code>appsscript.gs</code> (provided separately)
+      <br><br>
+      3. Deploy → New deployment → Web app → Anyone can access
+      <br><br>
+      4. Copy the deployment URL and replace <code>YOUR_APPS_SCRIPT_URL</code> in <code>contact.html</code>
+      <br><br>
+      5. Remove the setup notice div
+    </p>
+  </div-->
+
+  <div class="side-section">
+    <div class="side-label">Location</div>
+    <p class="side-note">Bengaluru, Karnataka, India<br>IST (UTC +5:30)</p>
+  </div>
+
+</aside>
+</div>
+
+<footer>
+  <span class="footer-text">© 2026 Hrudananda Das</span>
+  <div class="footer-links">
+    <a href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/harty1193" target="_blank" rel="noopener">GitHub</a>
+    <a href="notes.html">Blog</a>
+  </div>
+</footer>
+
+<script>
+  // ── REPLACE THIS with your deployed Apps Script URL ──────────────────────────
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSeJG3iodvEEGpqIw7jFO_Z88-r28Iq17NhjXc3OgfGvH5-Z9q-ds4H-VVykkc5OOsxA/exec';
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  // Character counters
+  document.getElementById('subject').addEventListener('input', function() {
+    document.getElementById('subjectCount').textContent = this.value.length;
+  });
+  document.getElementById('body').addEventListener('input', function() {
+    document.getElementById('bodyCount').textContent = this.value.length;
+  });
+
+  function showStatus(type, html) {
+    const el = document.getElementById('statusMsg');
+    el.className = 'status-msg ' + type;
+    el.innerHTML = html;
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function submitForm() {
+    const email   = document.getElementById('senderEmail').value.trim();
+    const subject = document.getElementById('subject').value.trim();
+    const body    = document.getElementById('body').value.trim();
+    const btn     = document.getElementById('submitBtn');
+
+    // Basic validation
+    if (!email || !subject || !body) {
+      showStatus('error', 'All three fields are required.');
+      return;
+    }
+    const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRx.test(email)) {
+      showStatus('error', 'Please enter a valid email address.');
+      return;
+    }
+
+    if (APPS_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbwSeJG3iodvEEGpqIw7jFO_Z88-r28Iq17NhjXc3OgfGvH5-Z9q-ds4H-VVykkc5OOsxA/exec') {
+      // Dev mode: show what would be sent
+      showStatus('success',
+        '<strong>Dev mode — Apps Script not wired yet.</strong><br>' +
+        'Would have sent:<br>' +
+        '· From: ' + email + '<br>' +
+        '· Subject: ' + subject + '<br>' +
+        '· Message: ' + body.substring(0, 80) + (body.length > 80 ? '...' : '')
+      );
+      return;
+    }
+
+    btn.disabled = true;
+    showStatus('loading', 'Sending...');
+
+    const payload = { email, subject, body, timestamp: new Date().toISOString() };
+
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(() => {
+      showStatus('success',
+        '<strong>Message sent.</strong><br>' +
+        'Thank you — I\'ll get back to you at <strong>' + email + '</strong> soon.'
+      );
+      document.getElementById('senderEmail').value = '';
+      document.getElementById('subject').value = '';
+      document.getElementById('body').value = '';
+      document.getElementById('subjectCount').textContent = '0';
+      document.getElementById('bodyCount').textContent = '0';
+      btn.disabled = false;
+    })
+    .catch(() => {
+      showStatus('error',
+        'Something went wrong. Please email directly at ' +
+        '<a href="mailto:hrudananda.das@proton.me">hrudananda.das@proton.me</a>'
+      );
+      btn.disabled = false;
+    });
+  }
+</script>
+
+</body>
+</html>
