@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baby Vaccination Schedule</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --mint: #C8F0D8;
+    --sage: #7DBF9A;
+    --deep: #1A3C2E;
+    --cream: #FDF8F0;
+    --warm: #F5EDD8;
+    --gold: #E8B84B;
+    --alert: #F4845F;
+    --sky: #A8D8EA;
+    --lavender: #C9B8E8;
+    --text: #2C2C2C;
+    --muted: #7A7A7A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  .hero {
+    background: var(--deep);
+    padding: 40px 32px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,240,216,0.15) 0%, transparent 70%);
+    top: -80px; right: -60px;
+  }
+
+  .hero::after {
+    content: '🌿';
+    font-size: 120px;
+    position: absolute;
+    right: 24px; bottom: -20px;
+    opacity: 0.12;
+  }
+
+  .hero-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    color: var(--cream);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+
+  .hero h1 span {
+    color: var(--mint);
+    font-style: italic;
+  }
+
+  .hero-sub {
+    color: rgba(255,255,255,0.55);
+    font-size: 14px;
+    margin-top: 16px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .hero-sub span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .hero-sub .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--sage);
+    display: inline-block;
+  }
+
+  .progress-bar-wrap {
+    background: var(--warm);
+    padding: 20px 32px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .progress-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .progress-bar {
+    height: 8px;
+    background: rgba(0,0,0,0.08);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--sage), var(--gold));
+    transition: width 1s ease;
+  }
+
+  .filters {
+    padding: 16px 32px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: var(--warm);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .filter-btn {
+    padding: 6px 16px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    background: rgba(0,0,0,0.05);
+    color: var(--muted);
+  }
+
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--deep);
+    color: var(--mint);
+    border-color: var(--deep);
+  }
+
+  .content { padding: 24px 32px 48px; max-width: 900px; }
+
+  .section-heading {
+    font-family: 'DM Serif Display', serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 32px 0 16px;
+  }
+
+  .vaccine-card {
+    background: white;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    border: 1.5px solid rgba(0,0,0,0.06);
+    overflow: hidden;
+    transition: transform 0.15s, box-shadow 0.15s;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .vaccine-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-header {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .card-stripe {
+    width: 6px;
+    flex-shrink: 0;
+    border-radius: 0;
+  }
+
+  .card-body {
+    padding: 16px 20px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .card-left { flex: 1; min-width: 200px; }
+
+  .vaccine-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--deep);
+    margin-bottom: 4px;
+  }
+
+  .vaccine-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .card-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .due-date {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--deep);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .age-tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-weight: 500;
+    background: var(--warm);
+    color: var(--muted);
+  }
+
+  .status-badge {
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .status-done   { background: #D4F5E2; color: #1A7A4A; }
+  .status-soon   { background: #FFF0D4; color: #C47F00; }
+  .status-upcoming { background: #EEF2FF; color: #4A5DB0; }
+  .status-today  { background: #FFE0D9; color: #C0391B; animation: pulse 1.5s infinite; }
+
+  @keyframes pulse {
+    0%,100% { opacity: 1; }
+    50%      { opacity: 0.7; }
+  }
+
+  .stripe-done     { background: var(--sage); }
+  .stripe-soon     { background: var(--gold); }
+  .stripe-upcoming { background: var(--lavender); }
+  .stripe-today    { background: var(--alert); }
+
+  .dose-pills {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+
+  .dose-pill {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 99px;
+    background: var(--mint);
+    color: var(--deep);
+    font-weight: 500;
+  }
+
+  .checkbox-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .checkbox-wrap input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: var(--sage);
+    cursor: pointer;
+  }
+
+  .checkbox-wrap label {
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 20px 32px;
+    background: var(--warm);
+    border-top: 1px solid rgba(0,0,0,0.06);
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+
+  .note-card {
+    background: linear-gradient(135deg, #FFF9EE, #FFF0F0);
+    border: 1.5px solid #F5D99A;
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #5C4A1A;
+  }
+
+  .note-card strong { display: block; margin-bottom: 4px; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 28px 20px 40px; }
+    .hero h1 { font-size: 28px; }
+    .content { padding: 16px 20px 48px; }
+    .filters { padding: 12px 20px; }
+    .progress-bar-wrap { padding: 16px 20px; }
+    .legend { padding: 16px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">Vaccination Tracker</div>
+  <h1>Your Baby's<br><span>Immunization Plan</span></h1>
+  <div class="hero-sub">
+    <span><span class="dot"></span> Born: 2nd May 2026</span>
+    <span><span class="dot"></span> IAP 2025 Schedule</span>
+    <span><span class="dot"></span> NIS + Private Vaccines</span>
+  </div>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-label">
+    <span>Vaccination Progress</span>
+    <span id="prog-text">calculating...</span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filterCards('all', this)">All Vaccines</button>
+  <button class="filter-btn" onclick="filterCards('done', this)">✓ Done</button>
+  <button class="filter-btn" onclick="filterCards('soon', this)">⚡ Due Soon</button>
+  <button class="filter-btn" onclick="filterCards('upcoming', this)">📅 Upcoming</button>
+</div>
+
+<div class="content">
+  <div class="note-card">
+    <strong>⚠️ Important</strong>
+    Dates below are calculated from DOB: 2 May 2025. Always confirm exact dates with your pediatrician. This tracker is a guide — your doctor's advice takes priority.
+  </div>
+
+  <div id="vaccine-list"></div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--sage)"></div> Completed</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Due within 30 days</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--alert)"></div> Overdue / Today</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--lavender)"></div> Upcoming</div>
+</div>
+
+<script>
+const DOB = new Date('2026-05-02');
+const TODAY = new Date('2026-06-05');
+
+function addDays(date, days) {
+  const d = new Date(date); d.setDate(d.getDate() + days); return d;
+}
+function addWeeks(date, w) { return addDays(date, w * 7); }
+function addMonths(date, m) {
+  const d = new Date(date);
+  d.setMonth(d.getMonth() + m);
+  return d;
+}
+function addYears(date, y) { return addMonths(date, y * 12); }
+
+function fmt(date) {
+  return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function getStatus(date) {
+  const diff = (date - TODAY) / (1000 * 60 * 60 * 24);
+  if (diff < -1) return 'done';
+  if (diff >= -1 && diff <= 0) return 'today';
+  if (diff > 0 && diff <= 30) return 'soon';
+  return 'upcoming';
+}
+
+function statusLabel(s) {
+  if (s === 'done') return '✓ Completed';
+  if (s === 'today') return '🔴 Due Today!';
+  if (s === 'soon') return '⚡ Due Soon';
+  return '📅 Upcoming';
+}
+
+const vaccines = [
+  {
+    name: "BCG",
+    desc: "Bacillus Calmette-Guérin — protects against severe tuberculosis (TB) in children",
+    doses: ["At birth"],
+    dates: [DOB],
+    source: "NIS (Free)"
+  },
+  {
+    name: "Hepatitis B – 1st Dose",
+    desc: "Prevents Hepatitis B virus infection which causes chronic liver disease",
+    doses: ["Birth dose within 24 hrs"],
+    dates: [DOB],
+    source: "NIS (Free)"
+  },
+  {
+    name: "OPV 0 (Zero dose)",
+    desc: "Oral Polio Vaccine – first dose given at birth for early protection",
+    doses: ["Birth"],
+    dates: [DOB],
+    source: "NIS (Free)"
+  },
+  {
+    name: "Pentavalent Dose 1",
+    desc: "DTP + Hep B + Hib — Diphtheria, Tetanus, Pertussis, Hepatitis B, Haemophilus influenzae type b",
+    doses: ["6 weeks"],
+    dates: [addWeeks(DOB, 6)],
+    source: "NIS (Free)"
+  },
+  {
+    name: "OPV 1",
+    desc: "2nd Oral Polio Vaccine dose",
+    doses: ["6 weeks"],
+    dates: [addWeeks(DOB, 6)],
+    source: "NIS (Free)"
+  },
+  {
+    name: "IPV 1 (Inactivated Polio)",
+    desc: "Injectable polio vaccine — stronger immune response, required per IAP 2025",
+    doses: ["6 weeks"],
+    dates: [addWeeks(DOB, 6)],
+    source: "Private"
+  },
+  {
+    name: "RVV / Rotavirus – Dose 1",
+    desc: "Prevents rotavirus diarrhoea, a leading cause of severe dehydration in infants",
+    doses: ["6 weeks"],
+    dates: [addWeeks(DOB, 6)],
+    source: "NIS / Private"
+  },
+  {
+    name: "PCV 13 – Dose 1",
+    desc: "Pneumococcal Conjugate Vaccine — prevents pneumonia, meningitis, ear infections",
+    doses: ["6 weeks"],
+    dates: [addWeeks(DOB, 6)],
+    source: "Private"
+  },
+  {
+    name: "Pentavalent Dose 2",
+    desc: "DTP + Hep B + Hib second dose",
+    doses: ["10 weeks"],
+    dates: [addWeeks(DOB, 10)],
+    source: "NIS (Free)"
+  },
+  {
+    name: "OPV 2",
+    desc: "Third Oral Polio Vaccine dose",
+    doses: ["10 weeks"],
+    dates: [addWeeks(DOB, 10)],
+    source: "NIS (Free)"
+  },
+  {
+    name: "RVV / Rotavirus – Dose 2",
+    desc: "Second rotavirus vaccine dose for continued protection",
+    doses: ["10 weeks"],
+    dates: [addWeeks(DOB, 10)],
+    source: "NIS / Private"
+  },
+  {
+    name: "PCV 13 – Dose 2",
+    desc: "Second pneumococcal vaccine dose",
+    doses: ["10 weeks"],
+    dates: [addWeeks(DOB, 10)],
+    source: "Private"
+  },
+  {
+    name: "Pentavalent Dose 3",
+    desc: "DTP + Hep B + Hib third and final primary dose",
+    doses: ["14 weeks"],
+    dates: [addWeeks(DOB, 14)],
+    source: "NIS (Free)"
+  },
+  {
+    name: "OPV 3",
+    desc: "Fourth Oral Polio Vaccine dose",
+    doses: ["14 weeks"],
+    dates: [addWeeks(DOB, 14)],
+    source: "NIS (Free)"
+  },
+  {
+    name: "IPV 2",
+    desc: "Second Injectable Polio Vaccine dose",
+    doses: ["14 weeks"],
+    dates: [addWeeks(DOB, 14)],
+    source: "Private"
+  },
+  {
+    name: "RVV / Rotavirus – Dose 3",
+    desc: "Third and final rotavirus dose (if using 3-dose vaccine like Rotateq)",
+    doses: ["14 weeks"],
+    dates: [addWeeks(DOB, 14)],
+    source: "Private"
+  },
+  {
+    name: "PCV 13 – Dose 3",
+    desc: "Third pneumococcal vaccine dose",
+    doses: ["14 weeks"],
+    dates: [addWeeks(DOB, 14)],
+    source: "Private"
+  },
+  {
+    name: "Influenza (Flu) – 1st",
+    desc: "Annual flu vaccine — first dose, followed by a 2nd dose 4 weeks later (for first-timers)",
+    doses: ["6 months", "6 months + 4 weeks"],
+    dates: [addMonths(DOB, 6), addMonths(DOB, 6.9)],
+    source: "Private"
+  },
+  {
+    name: "Measles / MR – 1st Dose",
+    desc: "Measles-Rubella vaccine — first dose under NIS program",
+    doses: ["9 months"],
+    dates: [addMonths(DOB, 9)],
+    source: "NIS (Free)"
+  },
+  {
+    name: "Hepatitis A – Dose 1",
+    desc: "Prevents Hepatitis A liver infection — spread through contaminated food/water",
+    doses: ["12 months"],
+    dates: [addMonths(DOB, 12)],
+    source: "Private"
+  },
+  {
+    name: "MMR – 1st Dose",
+    desc: "Measles, Mumps, Rubella combined vaccine",
+    doses: ["12 months"],
+    dates: [addMonths(DOB, 12)],
+    source: "Private"
+  },
+  {
+    name: "Varicella (Chickenpox) – 1st",
+    desc: "Prevents chickenpox and its complications",
+    doses: ["12 months"],
+    dates: [addMonths(DOB, 12)],
+    source: "Private"
+  },
+  {
+    name: "PCV 13 – Booster",
+    desc: "Pneumococcal booster dose",
+    doses: ["12–15 months"],
+    dates: [addMonths(DOB, 12)],
+    source: "Private"
+  },
+  {
+    name: "Hib Booster",
+    desc: "Haemophilus influenzae type b booster dose",
+    doses: ["12–15 months"],
+    dates: [addMonths(DOB, 12)],
+    source: "Private"
+  },
+  {
+    name: "Hepatitis A – Dose 2",
+    desc: "Second Hepatitis A dose for long-term immunity",
+    doses: ["18 months"],
+    dates: [addMonths(DOB, 18)],
+    source: "Private"
+  },
+  {
+    name: "DTP Booster 1",
+    desc: "First booster for Diphtheria, Tetanus, Pertussis",
+    doses: ["16–18 months"],
+    dates: [addMonths(DOB, 16)],
+    source: "NIS (Free)"
+  },
+  {
+    name: "OPV Booster",
+    desc: "Oral Polio Vaccine booster dose",
+    doses: ["16–18 months"],
+    dates: [addMonths(DOB, 16)],
+    source: "NIS (Free)"
+  },
+  {
+    name: "MMR – 2nd Dose",
+    desc: "Second Measles-Mumps-Rubella dose for complete immunity",
+    doses: ["15–18 months"],
+    dates: [addMonths(DOB, 15)],
+    source: "Private"
+  },
+  {
+    name: "Varicella (Chickenpox) – 2nd",
+    desc: "Second chickenpox dose for full protection",
+    doses: ["15–18 months"],
+    dates: [addMonths(DOB, 15)],
+    source: "Private"
+  },
+  {
+    name: "MR / Measles-Rubella – 2nd",
+    desc: "Second Measles-Rubella dose under NIS",
+    doses: ["16–24 months"],
+    dates: [addMonths(DOB, 16)],
+    source: "NIS (Free)"
+  },
+  {
+    name: "Typhoid Conjugate (TCV) – 1st",
+    desc: "Prevents typhoid fever — increasingly recommended given India's burden",
+    doses: ["9–12 months"],
+    dates: [addMonths(DOB, 9)],
+    source: "Private"
+  },
+  {
+    name: "DTP Booster 2",
+    desc: "Second DTP booster dose for sustained protection",
+    doses: ["4–6 years"],
+    dates: [addYears(DOB, 4)],
+    source: "NIS (Free)"
+  },
+  {
+    name: "OPV Final Booster",
+    desc: "Final oral polio booster",
+    doses: ["4–6 years"],
+    dates: [addYears(DOB, 4)],
+    source: "NIS (Free)"
+  }
+];
+
+// Sort by date
+vaccines.sort((a, b) => a.dates[0] - b.dates[0]);
+
+let checkedMap = JSON.parse(localStorage.getItem('vax_checked') || '{}');
+
+function saveChecked() {
+  localStorage.setItem('vax_checked', JSON.stringify(checkedMap));
+}
+
+function buildCards(filter = 'all') {
+  const list = document.getElementById('vaccine-list');
+  list.innerHTML = '';
+
+  let total = 0, doneCount = 0;
+
+  // Group by age milestone
+  const groups = {};
+  vaccines.forEach((v, i) => {
+    const d = v.dates[0];
+    const status = checkedMap[i] ? 'done' : getStatus(d);
+    if (status === 'done' || checkedMap[i]) doneCount++;
+    total++;
+    const key = v.doses[0];
+    if (!groups[key]) groups[key] = [];
+    groups[key].push({ v, i, status });
+  });
+
+  // Update progress
+  const pct = Math.round((doneCount / total) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-text').textContent = `${doneCount} of ${total} done (${pct}%)`;
+
+  let delay = 0;
+  Object.entries(groups).forEach(([groupName, items]) => {
+    const visible = items.filter(({ status }) =>
+      filter === 'all' ||
+      (filter === 'done' && status === 'done') ||
+      (filter === 'soon' && (status === 'soon' || status === 'today')) ||
+      (filter === 'upcoming' && status === 'upcoming')
+    );
+    if (!visible.length) return;
+
+    const heading = document.createElement('div');
+    heading.className = 'section-heading';
+    heading.textContent = groupName;
+    list.appendChild(heading);
+
+    visible.forEach(({ v, i, status }) => {
+      const card = document.createElement('div');
+      card.className = 'vaccine-card';
+      card.style.animationDelay = (delay * 50) + 'ms';
+      delay++;
+
+      const isChecked = checkedMap[i] || false;
+      const effectiveStatus = isChecked ? 'done' : status;
+      const stripeClass = `stripe-${effectiveStatus}`;
+      const badgeClass = `status-${effectiveStatus}`;
+
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="card-stripe ${stripeClass}"></div>
+          <div class="card-body">
+            <div class="card-left">
+              <div class="vaccine-name">${v.name}</div>
+              <div class="vaccine-desc">${v.desc}</div>
+              <div class="dose-pills">
+                ${v.dates.map((d, di) => `<span class="dose-pill">${di === 0 ? 'Primary' : 'Dose ' + (di+1)}: ${fmt(d)}</span>`).join('')}
+                <span class="dose-pill" style="background:var(--warm);color:var(--muted)">${v.source}</span>
+              </div>
+              <div class="checkbox-wrap">
+                <input type="checkbox" id="chk-${i}" ${isChecked ? 'checked' : ''} onchange="toggleCheck(${i})">
+                <label for="chk-${i}">Mark as given</label>
+              </div>
+            </div>
+            <div class="card-right">
+              <div class="due-date">${fmt(v.dates[0])}</div>
+              <div class="age-tag">${v.doses[0]}</div>
+              <div class="status-badge ${badgeClass}">${statusLabel(effectiveStatus)}</div>
+            </div>
+          </div>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  });
+}
+
+function toggleCheck(i) {
+  checkedMap[i] = !checkedMap[i];
+  saveChecked();
+  buildCards(currentFilter);
+}
+
+let currentFilter = 'all';
+
+function filterCards(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildCards(f);
+}
+
+buildCards('all');
+</script>
+</body>
+</html>
