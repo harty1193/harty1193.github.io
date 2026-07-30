@@ -7,176 +7,179 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --b50:#e6f1fb; --b100:#b5d4f4; --b200:#85b7eb;
-      --b400:#378add; --b600:#185fa5; --b800:#0c447c; --b900:#042c53;
-      --font:'Courier Prime','Courier New',Courier,monospace;
+    /* ── CONTACT-ONLY STYLES ── */
+    .page-grid-contact {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 0;
+      max-width: 1080px;
+      margin: 0 auto;
+      width: 100%;
+      flex: 1;
     }
-    html { scroll-behavior: smooth; }
-    body { font-family: var(--font); background: #f5f8fc; color: var(--b900); min-height: 100vh; display: flex; flex-direction: column; }
+    .main-col {
+      padding: 40px 40px 80px 24px;
+      border-right: 1px solid var(--border);
+    }
+    .side-col-contact {
+      padding: 40px 20px 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
 
-    /* NAV */
-    nav.topnav { padding: 1.8rem 2.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--b100); }
-    .nav-logo { font-size: 13px; letter-spacing: .12em; color: var(--b600); text-decoration: none; font-weight: 700; text-transform: uppercase; }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a { font-size: 12px; letter-spacing: .1em; color: var(--b400); text-decoration: none; text-transform: uppercase; }
-    .nav-links a:hover, .nav-links a.active { color: var(--b900); }
-
-    /* LAYOUT */
-    .page { flex: 1; display: grid; grid-template-columns: 1fr 220px; gap: 0; }
-    .main-col { padding: 3rem 3rem 5rem 2.5rem; border-right: 1px solid var(--b100); }
-    .side-col  { padding: 3rem 2rem 4rem; }
-
-    .back { font-size: 12px; letter-spacing: .12em; color: var(--b400); text-decoration: none; text-transform: uppercase; display: inline-block; margin-bottom: 2rem; }
-    .back:hover { color: var(--b900); }
-
-    .page-header { margin-bottom: 2.8rem; padding-bottom: 1.6rem; border-bottom: 1px solid var(--b100); }
-    .page-header h1 { font-size: clamp(20px,3.5vw,30px); font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--b900); margin-bottom: .3rem; }
-    .page-header .subtitle { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--b200); }
-
-    /* DIRECT CONTACT STRIP */
+    /* direct contact cards */
     .direct-strip {
-      display: flex; flex-wrap: wrap; gap: 1rem;
-      margin-bottom: 2.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 36px;
     }
     .direct-card {
-      flex: 1; min-width: 180px;
-      border: 1px solid var(--b100);
-      padding: 1rem 1.2rem;
+      flex: 1;
+      min-width: 160px;
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 2px;
-      background: var(--b50);
       text-decoration: none;
-      display: flex; flex-direction: column; gap: .3rem;
-      transition: border-color .15s;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: border-color .2s;
     }
-    .direct-card:hover { border-color: var(--b400); }
-    .direct-card .dc-label { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--b200); }
-    .direct-card .dc-value { font-size: 13px; letter-spacing: .04em; color: var(--b600); font-weight: 700; }
-    .direct-card .dc-arrow { font-size: 11px; color: var(--b400); margin-top: .2rem; }
+    .direct-card:nth-child(1) { border-left: 3px solid var(--green); }
+    .direct-card:nth-child(2) { border-left: 3px solid var(--blue); }
+    .direct-card:nth-child(3) { border-left: 3px solid var(--purple); }
+    .direct-card:hover { border-top-color: var(--muted); border-bottom-color: var(--muted); border-right-color: var(--muted); }
+    .dc-label { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+    .dc-value { font-size: 13px; color: var(--accent); font-weight: bold; }
+    .direct-card:nth-child(1) .dc-value { color: var(--green); }
+    .direct-card:nth-child(2) .dc-value { color: var(--blue); }
+    .direct-card:nth-child(3) .dc-value { color: var(--purple); }
+    .dc-arrow { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
-    /* SECTION LABEL */
-    .sec-label { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--b200); margin-bottom: 1.4rem; padding-bottom: .45rem; border-bottom: 1px solid var(--b100); }
+    /* divider label */
+    .sec-label {
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
 
-    /* FORM */
-    .contact-form { max-width: 560px; }
-    .field { margin-bottom: 1.6rem; }
-    .field label { display: block; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--b600); margin-bottom: .5rem; }
+    /* form */
+    .contact-form { max-width: 540px; }
+    .field { margin-bottom: 22px; }
+    .field label {
+      display: block;
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 6px;
+    }
     .field input, .field textarea {
       width: 100%;
-      font-family: var(--font);
+      font-family: var(--font-mono);
       font-size: 13px;
-      letter-spacing: .03em;
-      color: var(--b900);
-      background: #fff;
-      border: 1px solid var(--b100);
-      padding: .65rem .9rem;
+      color: var(--accent);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 9px 12px;
       border-radius: 2px;
       outline: none;
-      transition: border-color .15s;
+      transition: border-color .2s;
       resize: vertical;
     }
-    .field input:focus, .field textarea:focus { border-color: var(--b400); }
+    .field input:focus, .field textarea:focus { border-color: var(--cyan); }
     .field textarea { min-height: 140px; }
-    .field .hint { font-size: 11px; color: var(--b200); letter-spacing: .04em; margin-top: .35rem; font-style: italic; }
+    .field .hint { font-size: 11px; color: var(--muted); letter-spacing: .04em; margin-top: 5px; font-style: italic; }
+    .char-counter { font-size: 10px; color: var(--muted); letter-spacing: .08em; text-align: right; margin-top: 4px; }
+    .char-counter span { color: var(--cyan); }
 
-    /* CHARACTER COUNTER */
-    .char-counter { font-size: 10px; color: var(--b200); letter-spacing: .08em; text-align: right; margin-top: .25rem; }
-
-    /* SUBMIT */
-    .submit-row { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; margin-top: .4rem; }
+    /* submit */
+    .submit-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 6px; }
     .btn-submit {
-      font-family: var(--font);
-      font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
-      color: #fff; background: var(--b600);
-      border: 1px solid var(--b600);
-      padding: .65rem 1.6rem;
-      border-radius: 2px; cursor: pointer;
-      transition: background .15s, border-color .15s;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: #0d0d0d;
+      background: var(--cyan);
+      border: 1px solid var(--cyan);
+      padding: 9px 22px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background .2s, border-color .2s;
+      font-weight: bold;
     }
-    .btn-submit:hover { background: var(--b800); border-color: var(--b800); }
-    .btn-submit:disabled { background: var(--b200); border-color: var(--b200); cursor: not-allowed; }
-    .submit-note { font-size: 11px; color: var(--b200); letter-spacing: .06em; font-style: italic; }
+    .btn-submit:hover { background: var(--blue); border-color: var(--blue); }
+    .btn-submit:disabled { background: var(--border); border-color: var(--border); color: var(--muted); cursor: not-allowed; }
 
-    /* STATUS MESSAGES */
+    /* status */
     .status-msg {
-      display: none; margin-top: 1.4rem;
-      padding: .9rem 1.1rem; border-left: 3px solid;
-      font-size: 13px; line-height: 1.7; border-radius: 0 2px 2px 0;
+      display: none;
+      margin-top: 20px;
+      padding: 12px 16px;
+      border-left: 3px solid;
+      font-size: 13px;
+      line-height: 1.7;
+      border-radius: 0 2px 2px 0;
     }
-    .status-msg.success { border-color: #1a7a4a; background: #e8f7ef; color: #1a5c2e; }
-    .status-msg.error   { border-color: #c0392b; background: #fdf0f0; color: #8b1a1a; }
-    .status-msg.loading { border-color: var(--b400); background: var(--b50); color: var(--b600); }
+    .status-msg.success { border-color: var(--green);  background: #0a1f10; color: var(--green); }
+    .status-msg.error   { border-color: var(--red);    background: #200a0a; color: var(--red); }
+    .status-msg.loading { border-color: var(--cyan);   background: #031820; color: var(--cyan); }
 
-    /* SETUP NOTICE */
-    .setup-notice {
-      border: 1px dashed var(--b100); padding: 1rem 1.2rem;
-      border-radius: 2px; margin-bottom: 2rem;
-      font-size: 12px; line-height: 1.75; color: var(--b600); letter-spacing: .03em;
+    /* sidebar */
+    .side-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 14px 16px;
+      border-radius: 2px;
     }
-    .setup-notice strong { display: block; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--b400); margin-bottom: .4rem; }
-    .setup-notice code { font-family: var(--font); font-size: 11px; background: var(--b50); border: 1px solid var(--b100); padding: 1px 5px; border-radius: 1px; color: var(--b800); }
-
-    /* SIDEBAR */
-    .side-section { margin-bottom: 2.5rem; }
-    .side-label { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--b200); margin-bottom: 1rem; padding-bottom: .4rem; border-bottom: 1px solid var(--b100); }
-    .side-links { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
-    .side-links a { font-size: 12px; letter-spacing: .06em; color: var(--b400); text-decoration: none; text-transform: uppercase; display: flex; align-items: baseline; gap: .5rem; }
-    .side-links a:hover { color: var(--b900); }
-    .side-links .snum { font-size: 10px; color: var(--b200); min-width: 18px; }
-    .side-note { font-size: 12px; line-height: 1.7; color: var(--b600); letter-spacing: .03em; }
-
-    /* FOOTER */
-    footer { padding: 1.4rem 2.5rem; border-top: 1px solid var(--b100); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5rem; }
-    .footer-text { font-size: 11px; letter-spacing: .1em; color: var(--b200); text-transform: uppercase; }
-    .footer-links { display: flex; gap: 1.5rem; }
-    .footer-links a { font-size: 11px; letter-spacing: .1em; color: var(--b400); text-decoration: none; text-transform: uppercase; }
-    .footer-links a:hover { color: var(--b600); }
-
-    @media(max-width:700px){
-      .page { grid-template-columns: 1fr; }
-      .main-col { padding: 2rem 1.5rem; border-right: none; border-bottom: 1px solid var(--b100); }
-      .side-col { padding: 2rem 1.5rem; }
+    .side-label {
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
     }
-    @media(prefers-color-scheme:dark){
-      body { background: #050e1a; color: #b5d4f4; }
-      nav.topnav, footer, .main-col, .page-header { border-color: #0c3055; }
-      .nav-logo { color: #85b7eb; }
-      .nav-links a, .back, .footer-links a { color: #378add; }
-      .nav-links a:hover, .nav-links a.active, .back:hover, .footer-links a:hover { color: #b5d4f4; }
-      .page-header h1 { color: #b5d4f4; }
-      .page-header .subtitle, .sec-label, .side-label { color: #185fa5; }
-      .direct-card { background: #0c3055; border-color: #185fa5; }
-      .direct-card:hover { border-color: #378add; }
-      .direct-card .dc-label { color: #185fa5; }
-      .direct-card .dc-value { color: #85b7eb; }
-      .direct-card .dc-arrow { color: #378add; }
-      .field label { color: #378add; }
-      .field input, .field textarea { background: #041e38; border-color: #185fa5; color: #b5d4f4; }
-      .field input:focus, .field textarea:focus { border-color: #378add; }
-      .field .hint, .char-counter, .submit-note { color: #185fa5; }
-      .btn-submit { background: #185fa5; border-color: #185fa5; }
-      .btn-submit:hover { background: #378add; border-color: #378add; }
-      .btn-submit:disabled { background: #0c3055; border-color: #0c3055; color: #185fa5; }
-      .status-msg.success { background: #041e0f; color: #4ab87a; border-color: #1a7a4a; }
-      .status-msg.error   { background: #1a0505; color: #d45c5c; border-color: #8b1a1a; }
-      .status-msg.loading { background: #041e38; color: #85b7eb; border-color: #378add; }
-      .setup-notice { border-color: #0c3055; color: #378add; }
-      .setup-notice strong { color: #378add; }
-      .setup-notice code { background: #0c3055; border-color: #185fa5; color: #85b7eb; }
-      .side-section .side-label { border-color: #0c3055; }
-      .side-links a { color: #378add; }
-      .side-links a:hover { color: #b5d4f4; }
-      .side-note { color: #378add; }
-      .footer-text { color: #185fa5; }
+    .side-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .side-links a {
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      transition: color .2s;
+    }
+    .side-links a:hover { color: var(--accent); }
+    .side-links .snum { color: var(--border); font-size: 10px; min-width: 14px; }
+    .side-links a:nth-child(1):hover { color: var(--green); }
+    .side-links a:nth-child(2):hover { color: var(--blue); }
+    .side-links a:nth-child(3):hover { color: var(--purple); }
+    .side-note { font-size: 12px; line-height: 1.75; color: var(--muted); }
+    .side-note .highlight { color: var(--orange); }
+
+    @media(max-width: 700px) {
+      .page-grid-contact { grid-template-columns: 1fr; }
+      .main-col { padding: 24px; border-right: none; border-bottom: 1px solid var(--border); }
+      .side-col-contact { padding: 24px; }
     }
   </style>
 </head>
 <body>
 
-<nav class="topnav">
-  <a class="nav-logo" href="index.html">H.DAS</a>
+<nav>
+  <a class="nav-brand" href="index.html">H.DAS</a>
   <ul class="nav-links">
     <li><a href="notes.html">Blog</a></li>
     <li><a href="whoami.html">About</a></li>
@@ -186,7 +189,7 @@
   </ul>
 </nav>
 
-<div class="page">
+<div class="page-grid-contact">
 <main class="main-col">
 
   <a class="back" href="index.html">← Back</a>
@@ -199,7 +202,7 @@
   <!-- DIRECT CONTACT CARDS -->
   <div class="direct-strip">
     <a class="direct-card" href="mailto:hrudananda.das@proton.me">
-      <span class="dc-label">Email (ProtonMail)</span>
+      <span class="dc-label">Email — ProtonMail</span>
       <span class="dc-value">hrudananda.das@proton.me</span>
       <span class="dc-arrow">Send email →</span>
     </a>
@@ -215,10 +218,8 @@
     </a>
   </div>
 
-  <!-- FORM SECTION -->
+  <!-- FORM -->
   <div class="sec-label">Or send a message via the form below</div>
-
-  <!-- SETUP NOTICE — remove after Apps Script is wired up -->
 
   <div class="contact-form">
     <div class="field">
@@ -241,7 +242,6 @@
 
     <div class="submit-row">
       <button class="btn-submit" id="submitBtn" onclick="submitForm()">Send Message →</button>
-      <!--span class="submit-note">Goes to your spreadsheet + a copy to ProtonMail</span-->
     </div>
 
     <div class="status-msg" id="statusMsg"></div>
@@ -250,57 +250,49 @@
 </main>
 
 <!-- SIDEBAR -->
-<aside class="side-col">
+<aside class="side-col-contact">
 
   <div class="side-section">
     <div class="side-label">Reach me directly</div>
     <ul class="side-links">
-      <li><a href="mailto:hrudananda.das@proton.me"><span class="snum">✉</span><span>ProtonMail</span></a></li>
-      <li><a href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener"><span class="snum">↗</span><span>LinkedIn</span></a></li>
-      <li><a href="https://github.com/harty1193" target="_blank" rel="noopener"><span class="snum">↗</span><span>GitHub</span></a></li>
+      <li><a href="mailto:hrudananda.das@proton.me"><span class="snum">✉</span> ProtonMail</a></li>
+      <li><a href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener"><span class="snum">↗</span> LinkedIn</a></li>
+      <li><a href="https://github.com/harty1193" target="_blank" rel="noopener"><span class="snum">↗</span> GitHub</a></li>
     </ul>
   </div>
 
-  <!--div class="side-section">
-    <div class="side-label">Spreadsheet setup</div>
-    <p class="side-note">
-      To wire the form to your Google Sheet:
-      <br><br>
-      1. Open your Sheet → Extensions → Apps Script
-      <br><br>
-      2. Paste the <strong>Apps Script code</strong> from <code>appsscript.gs</code> (provided separately)
-      <br><br>
-      3. Deploy → New deployment → Web app → Anyone can access
-      <br><br>
-      4. Copy the deployment URL and replace <code>YOUR_APPS_SCRIPT_URL</code> in <code>contact.html</code>
-      <br><br>
-      5. Remove the setup notice div
-    </p>
-  </div-->
-
   <div class="side-section">
     <div class="side-label">Location</div>
-    <p class="side-note">Bengaluru, Karnataka, India<br>IST (UTC +5:30)</p>
+    <p class="side-note">
+      Bengaluru, Karnataka, India<br>
+      <span class="highlight">IST (UTC +5:30)</span><br><br>
+      Open to relocation — Netherlands, Finland, Sweden, Ireland
+    </p>
+  </div>
+
+  <div class="side-section">
+    <div class="side-label">Navigation</div>
+    <ul class="side-links">
+      <li><a href="whoami.html"><span class="snum">→</span> About me</a></li>
+      <li><a href="certifications.html"><span class="snum">→</span> Certifications</a></li>
+      <li><a href="notes.html"><span class="snum">→</span> Blog</a></li>
+      <li><a href="index.html"><span class="snum">→</span> Home</a></li>
+    </ul>
   </div>
 
 </aside>
 </div>
 
 <footer>
-  <span class="footer-text">© 2026 Hrudananda Das</span>
-  <div class="footer-links">
-    <a href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener">LinkedIn</a>
-    <a href="https://github.com/harty1193" target="_blank" rel="noopener">GitHub</a>
-    <a href="notes.html">Blog</a>
-  </div>
+  <span>© 2026 Hrudananda Das</span>
+  <a href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener">LinkedIn</a>
+  <a href="https://github.com/harty1193" target="_blank" rel="noopener">GitHub</a>
+  <a href="notes.html">Blog</a>
 </footer>
 
 <script>
-  // ── REPLACE THIS with your deployed Apps Script URL ──────────────────────────
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSeJG3iodvEEGpqIw7jFO_Z88-r28Iq17NhjXc3OgfGvH5-Z9q-ds4H-VVykkc5OOsxA/exec';
-  // ─────────────────────────────────────────────────────────────────────────────
 
-  // Character counters
   document.getElementById('subject').addEventListener('input', function() {
     document.getElementById('subjectCount').textContent = this.value.length;
   });
@@ -322,45 +314,20 @@
     const body    = document.getElementById('body').value.trim();
     const btn     = document.getElementById('submitBtn');
 
-    // Basic validation
-    if (!email || !subject || !body) {
-      showStatus('error', 'All three fields are required.');
-      return;
-    }
+    if (!email || !subject || !body) { showStatus('error', 'All three fields are required.'); return; }
     const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRx.test(email)) {
-      showStatus('error', 'Please enter a valid email address.');
-      return;
-    }
-
-    if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL') {
-      // Dev mode: show what would be sent
-      showStatus('success',
-        '<strong>Dev mode — Apps Script not wired yet.</strong><br>' +
-        'Would have sent:<br>' +
-        '· From: ' + email + '<br>' +
-        '· Subject: ' + subject + '<br>' +
-        '· Message: ' + body.substring(0, 80) + (body.length > 80 ? '...' : '')
-      );
-      return;
-    }
+    if (!emailRx.test(email)) { showStatus('error', 'Please enter a valid email address.'); return; }
 
     btn.disabled = true;
     showStatus('loading', 'Sending...');
 
-    const payload = { email, subject, body, timestamp: new Date().toISOString() };
-
     fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
+      method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify({ email, subject, body, timestamp: new Date().toISOString() })
     })
     .then(() => {
-      showStatus('success',
-        '<strong>Message sent.</strong><br>' +
-        'Thank you — I\'ll get back to you at <strong>' + email + '</strong> soon.'
-      );
+      showStatus('success', '<strong>Message sent.</strong><br>Thank you — I\'ll get back to you at <strong>' + email + '</strong> soon.');
       document.getElementById('senderEmail').value = '';
       document.getElementById('subject').value = '';
       document.getElementById('body').value = '';
@@ -369,10 +336,7 @@
       btn.disabled = false;
     })
     .catch(() => {
-      showStatus('error',
-        'Something went wrong. Please email directly at ' +
-        '<a href="mailto:hrudananda.das@proton.me">hrudananda.das@proton.me</a>'
-      );
+      showStatus('error', 'Something went wrong. Please email directly at <a href="mailto:hrudananda.das@proton.me" style="color:var(--red)">hrudananda.das@proton.me</a>');
       btn.disabled = false;
     });
   }

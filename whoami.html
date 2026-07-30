@@ -4,384 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Who Am I — Hrudananda Das</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:       #0d0d0d;
-      --surface:  #141414;
-      --border:   #252525;
-      --accent:   #f0f0f0;
-      --muted:    #666;
-      --font:     'Courier New', Courier, monospace;
-      --max:      760px;
-
-      /* colour palette */
-      --green:    #3ddc84;
-      --blue:     #58a6ff;
-      --purple:   #c084fc;
-      --amber:    #fbbf24;
-      --pink:     #f472b6;
-      --cyan:     #22d3ee;
-      --orange:   #fb923c;
-      --red:      #f87171;
-
-      /* section accent colours */
-      --c-exp:    var(--green);
-      --c-skill:  var(--cyan);
-      --c-proj:   var(--purple);
-      --c-cert:   var(--blue);
-      --c-edu:    var(--amber);
-      --c-ach:    var(--pink);
-      --c-lang:   var(--orange);
-      --c-int:    var(--green);
-      --c-con:    var(--cyan);
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--accent);
-      font-family: var(--font);
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    /* ── NAV ── */
-    nav {
-      border-bottom: 1px solid var(--border);
-      padding: 18px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      background: var(--bg);
-      z-index: 10;
-    }
-    .nav-brand {
-      font-weight: bold;
-      font-size: 15px;
-      color: var(--green);
-      text-decoration: none;
-      letter-spacing: 1px;
-    }
-    .nav-links { display: flex; gap: 24px; list-style: none; }
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 13px;
-      transition: color .2s;
-    }
-    .nav-links a:hover { color: var(--accent); }
-
-    /* ── LAYOUT ── */
-    main {
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 60px 24px 80px;
-    }
-
-    /* ── BACK ── */
-    .back {
-      display: inline-block;
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 13px;
-      margin-bottom: 40px;
-      transition: color .2s;
-    }
-    .back:hover { color: var(--accent); }
-
-    /* ── HERO ── */
-    .hero {
-      display: flex;
-      gap: 28px;
-      align-items: flex-start;
-      margin-bottom: 52px;
-      padding: 24px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--green);
-      border-radius: 3px;
-    }
-    .avatar {
-      width: 80px;
-      height: 80px;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      background: #1a1a1a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      color: var(--muted);
-      text-align: center;
-      flex-shrink: 0;
-      line-height: 1.4;
-    }
-    .hero-text h1 {
-      font-size: 22px;
-      font-weight: bold;
-      color: var(--green);
-      margin-bottom: 4px;
-      letter-spacing: 0.5px;
-    }
-    .hero-text .role {
-      color: var(--cyan);
-      font-size: 13px;
-      margin-bottom: 14px;
-    }
-    .hero-text p {
-      color: #b8b8b8;
-      font-size: 13px;
-      line-height: 1.8;
-      max-width: 580px;
-    }
-    .award-badge {
-      display: inline-block;
-      margin-top: 10px;
-      font-size: 11px;
-      color: var(--amber);
-      border: 1px solid #3a2e00;
-      background: #1a1500;
-      padding: 2px 8px;
-      border-radius: 2px;
-    }
-    .hero-contact {
-      margin-top: 14px;
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      font-size: 12px;
-      color: var(--muted);
-    }
-    .hero-contact a { color: var(--blue); text-decoration: none; }
-    .hero-contact a:hover { text-decoration: underline; }
-
-    /* ── SECTION ── */
-    section { margin-bottom: 52px; }
-    .section-label {
-      font-size: 11px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      margin-bottom: 20px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .section-label .num {
-      font-size: 11px;
-      font-weight: bold;
-      padding: 1px 6px;
-      border-radius: 2px;
-    }
-    /* per-section number badge colours */
-    .s-exp   .num { color: var(--bg); background: var(--c-exp); }
-    .s-skill .num { color: var(--bg); background: var(--c-skill); }
-    .s-proj  .num { color: var(--bg); background: var(--c-proj); }
-    .s-cert  .num { color: var(--bg); background: var(--c-cert); }
-    .s-edu   .num { color: var(--bg); background: var(--c-edu); }
-    .s-ach   .num { color: var(--bg); background: var(--c-ach); }
-    .s-lang  .num { color: var(--bg); background: var(--c-lang); }
-    .s-int   .num { color: var(--bg); background: var(--c-int); }
-    .s-con   .num { color: var(--bg); background: var(--c-con); }
-
-    /* ── EXPERIENCE ── */
-    .entry {
-      margin-bottom: 28px;
-      padding: 16px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--c-exp);
-      border-radius: 2px;
-    }
-    .entry-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 2px;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .entry-title { font-size: 14px; font-weight: bold; color: var(--accent); }
-    .entry-period { font-size: 12px; color: var(--muted); white-space: nowrap; }
-    .entry-org { font-size: 12px; color: var(--c-exp); margin-bottom: 10px; }
-    .entry ul { padding-left: 16px; }
-    .entry ul li {
-      font-size: 13px;
-      color: #b0b0b0;
-      margin-bottom: 5px;
-      line-height: 1.7;
-    }
-    .entry ul li::marker { color: var(--c-exp); }
-
-    /* project entries use purple left border */
-    .entry.proj-entry { border-left-color: var(--c-proj); }
-    .entry.proj-entry .entry-org { color: var(--c-proj); }
-
-    /* edu entry uses amber */
-    .entry.edu-entry { border-left-color: var(--c-edu); }
-    .entry.edu-entry .entry-org { color: var(--c-edu); }
-
-    /* ── SKILLS ── */
-    .skills-group { margin-bottom: 20px; }
-    .skills-group-label {
-      font-size: 11px;
-      color: var(--c-skill);
-      margin-bottom: 10px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-    .tags { display: flex; flex-wrap: wrap; gap: 8px; }
-
-    /* tag colour families */
-    .tag {
-      padding: 3px 10px;
-      font-size: 12px;
-      border-radius: 2px;
-      border: 1px solid;
-    }
-    .tag-green  { color: var(--green);  background: #0a1f10; border-color: #1a4020; }
-    .tag-cyan   { color: var(--cyan);   background: #031820; border-color: #0a3540; }
-    .tag-purple { color: var(--purple); background: #180a28; border-color: #341560; }
-    .tag-blue   { color: var(--blue);   background: #071525; border-color: #0a2a48; }
-    .tag-amber  { color: var(--amber);  background: #1a1000; border-color: #3a2800; }
-    .tag-pink   { color: var(--pink);   background: #200a14; border-color: #40152a; }
-    .tag-orange { color: var(--orange); background: #1a0e00; border-color: #3a2000; }
-    .tag-muted  { color: #999;          background: #161616; border-color: #2a2a2a; }
-
-    /* ── PROJECT CARDS ── */
-    .project-card {
-      margin-bottom: 16px;
-      padding: 14px 16px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--c-proj);
-      border-radius: 2px;
-    }
-    .project-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 5px;
-    }
-    .project-title { font-size: 13px; font-weight: bold; color: var(--purple); }
-    .project-meta { font-size: 11px; color: var(--muted); }
-    .project-card p { font-size: 13px; color: #b0b0b0; }
-
-    /* ── CERTS ── */
-    .cert {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      margin-bottom: 12px;
-      padding: 10px 14px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--c-cert);
-      border-radius: 2px;
-    }
-    .cert-icon {
-      width: 30px;
-      height: 30px;
-      background: #071525;
-      border: 1px solid #0a2a48;
-      border-radius: 3px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 9px;
-      font-weight: bold;
-      color: var(--blue);
-      flex-shrink: 0;
-    }
-    .cert-info .cert-name { font-size: 13px; color: var(--accent); font-weight: bold; }
-    .cert-info .cert-code { font-size: 12px; color: var(--muted); }
-    .cert-info .cert-code.inprog  { color: var(--blue); }
-    .cert-info .cert-code.planned { color: var(--amber); }
-
-    /* ── ACHIEVEMENTS ── */
-    .achievement {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 10px;
-      font-size: 13px;
-      color: #b0b0b0;
-      padding: 8px 12px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--c-ach);
-      border-radius: 2px;
-    }
-    .achievement .hex { color: var(--pink); flex-shrink: 0; }
-
-    /* ── LANGUAGES ── */
-    .lang-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 14px;
-      margin-bottom: 8px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--c-lang);
-      border-radius: 2px;
-      font-size: 13px;
-    }
-    .lang-name { color: var(--accent); }
-    .lang-level { color: var(--orange); font-size: 12px; }
-
-    /* ── CONTACT ── */
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .contact-item {
-      font-size: 13px;
-      color: #b0b0b0;
-      padding: 8px 12px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 2px;
-    }
-    .contact-item a { color: var(--cyan); text-decoration: none; }
-    .contact-item a:hover { text-decoration: underline; }
-
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 24px;
-      text-align: center;
-      font-size: 12px;
-      color: var(--muted);
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-    }
-    footer a { color: var(--muted); text-decoration: none; }
-    footer a:hover { color: var(--accent); }
-
-    @media (max-width: 520px) {
-      .hero { flex-direction: column; }
-      .contact-grid { grid-template-columns: 1fr; }
-      .entry-header { flex-direction: column; }
-    }
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
 <nav>
   <a class="nav-brand" href="index.html">H.DAS</a>
   <ul class="nav-links">
-    <li><a href="index.html#blog">Blog</a></li>
-    <li><a href="whoami.html">About</a></li>
-    <li><a href="https://github.com/harty1193" target="_blank">GitHub</a></li>
+    <li><a href="notes.html">Blog</a></li>
+    <li><a href="whoami.html" class="active">About</a></li>
+    <li><a href="certifications.html">Certs</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="https://github.com/harty1193" target="_blank" rel="noopener">GitHub</a></li>
   </ul>
 </nav>
 
@@ -392,7 +29,7 @@
   <!-- HERO -->
   <div class="hero">
     <div class="avatar">
-      <img src="Passport-Photo.png" alt="Passport Photo" style="width:100%; height:100%; object-fit:cover;">
+      <img src="Passport-Photo.png" alt="Hrudananda Das" style="width:100%;height:100%;object-fit:cover;">
     </div>
     <div class="hero-text">
       <h1>Hrudananda Das</h1>
@@ -404,8 +41,10 @@
         Kubernetes. Passionate about delivering secure, efficient, and scalable IT solutions while
         effectively managing vendors and leading projects to success.
       </p>
-      <span class="award-badge">⬡ Star Achiever — One Microsoft (2023)</span>
-      <span class="award-badge">⬡ CE&S India Culture & Impact Award (2026)</span>
+      <div class="awards-row">
+        <span class="award-badge">⬡ Star Achiever — One Microsoft (2023)</span>
+        <span class="award-badge">⬡ CE&amp;S India Culture &amp; Impact Award (2026)</span>
+      </div>
       <div class="hero-contact">
         <span>📧 <a href="mailto:hrudananda.das@outlook.com">hrudananda.das@outlook.com</a></span>
         <span>📞 +91 9583 678 488</span>
@@ -607,57 +246,9 @@
     </div>
   </section>
 
-  <!-- CERTIFICATIONS -->
-  <section class="s-cert">
-    <p class="section-label"><span class="num">04</span>Certifications</p>
-
-    <div class="cert">
-      <div class="cert-icon">MS</div>
-      <div class="cert-info">
-        <p class="cert-name">Azure Administrator Associate</p>
-        <p class="cert-code">Microsoft · AZ-104</p>
-      </div>
-    </div>
-    <div class="cert">
-      <div class="cert-icon">MS</div>
-      <div class="cert-info">
-        <p class="cert-name">Azure Fundamentals</p>
-        <p class="cert-code">Microsoft · AZ-900</p>
-      </div>
-    </div>
-    <div class="cert">
-      <div class="cert-icon">MS</div>
-      <div class="cert-info">
-        <p class="cert-name">Azure AI Fundamentals</p>
-        <p class="cert-code">Microsoft · AI-900</p>
-      </div>
-    </div>
-    <div class="cert">
-      <div class="cert-icon">MS</div>
-      <div class="cert-info">
-        <p class="cert-name">Security, Compliance &amp; Identity Fundamentals</p>
-        <p class="cert-code">Microsoft · SC-900</p>
-      </div>
-    </div>
-    <div class="cert">
-      <div class="cert-icon">MS</div>
-      <div class="cert-info">
-        <p class="cert-name">Security Operations Analyst Associate</p>
-        <p class="cert-code inprog">Microsoft · SC-200 — in progress</p>
-      </div>
-    </div>
-    <div class="cert">
-      <div class="cert-icon">MS</div>
-      <div class="cert-info">
-        <p class="cert-name">Azure Security Engineer Associate</p>
-        <p class="cert-code planned">Microsoft · AZ-500 — planned</p>
-      </div>
-    </div>
-  </section>
-
   <!-- EDUCATION -->
   <section class="s-edu">
-    <p class="section-label"><span class="num">05</span>Education</p>
+    <p class="section-label"><span class="num">04</span>Education</p>
     <div class="entry edu-entry">
       <div class="entry-header">
         <span class="entry-title">Master of Computer Applications (MCA)</span>
@@ -669,8 +260,8 @@
 
   <!-- ACHIEVEMENTS -->
   <section class="s-ach">
-    <p class="section-label"><span class="num">06</span>Achievements</p>
-    <div class="achievement"><span class="hex">⬡</span> CE&S India Culture & Impact Award (2026)</div>
+    <p class="section-label"><span class="num">05</span>Achievements</p>
+    <div class="achievement"><span class="hex">⬡</span> CE&amp;S India Culture &amp; Impact Award (2026)</div>
     <div class="achievement"><span class="hex">⬡</span> Star Achiever — One Microsoft (2023)</div>
     <div class="achievement"><span class="hex">⬡</span> Winner — IT Quiz, Mindfire Solutions (2013)</div>
     <div class="achievement"><span class="hex">⬡</span> Junior Level Cyber Olympiad — District Level (2006)</div>
@@ -679,7 +270,7 @@
 
   <!-- LANGUAGES -->
   <section class="s-lang">
-    <p class="section-label"><span class="num">07</span>Languages</p>
+    <p class="section-label"><span class="num">06</span>Languages</p>
     <div class="lang-row"><span class="lang-name">English</span><span class="lang-level">C1 — Full Professional Proficiency</span></div>
     <div class="lang-row"><span class="lang-name">Hindi</span><span class="lang-level">Fluent</span></div>
     <div class="lang-row"><span class="lang-name">Odia</span><span class="lang-level">Native</span></div>
@@ -688,7 +279,7 @@
 
   <!-- INTERESTS -->
   <section class="s-int">
-    <p class="section-label"><span class="num">08</span>Interests</p>
+    <p class="section-label"><span class="num">07</span>Interests</p>
     <div class="tags">
       <span class="tag tag-green">Video Games</span>
       <span class="tag tag-cyan">Travelling</span>
@@ -702,13 +293,13 @@
 
   <!-- CONTACT -->
   <section class="s-con" id="contact">
-    <p class="section-label"><span class="num">09</span>Contact</p>
+    <p class="section-label"><span class="num">08</span>Contact</p>
     <div class="contact-grid">
       <div class="contact-item">📧 <a href="mailto:hrudananda.das@outlook.com">hrudananda.das@outlook.com</a></div>
       <div class="contact-item">📞 +91 9583 678 488</div>
-      <div class="contact-item">💼 <a href="https://linkedin.com/in/harty1193" target="_blank">linkedin.com/in/harty1193</a></div>
-      <div class="contact-item">🐙 <a href="https://github.com/harty1193" target="_blank">github.com/harty1193</a></div>
-      <div class="contact-item">📍 Bengaluru, India</div>
+      <div class="contact-item">💼 <a href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener">linkedin.com/in/harty1193</a></div>
+      <div class="contact-item">🐙 <a href="https://github.com/harty1193" target="_blank" rel="noopener">github.com/harty1193</a></div>
+      <div class="contact-item">📍 Bengaluru, India · Open to Relocation</div>
     </div>
   </section>
 
@@ -716,8 +307,8 @@
 
 <footer>
   <span>© 2026 Hrudananda Das</span>
-  <a href="https://linkedin.com/in/harty1193" target="_blank">LinkedIn</a>
-  <a href="https://github.com/harty1193" target="_blank">GitHub</a>
+  <a href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener">LinkedIn</a>
+  <a href="https://github.com/harty1193" target="_blank" rel="noopener">GitHub</a>
   <a href="feed.xml">RSS</a>
 </footer>
 
