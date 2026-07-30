@@ -7,175 +7,334 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
   <style>
-    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
-    :root {
-      --b50:#e6f1fb; --b100:#b5d4f4; --b200:#85b7eb;
-      --b400:#378add; --b600:#185fa5; --b800:#0c447c; --b900:#042c53;
-      --green:#1a7a4a; --green-bg:#e8f7ef; --green-border:#9dd6b8;
-      --orange:#a05a00; --orange-bg:#fff4e6; --orange-border:#f5c97a;
-      --red:#8b1a1a; --red-bg:#fdf0f0; --red-border:#f5b7b7;
-      --font:'Courier Prime','Courier New',Courier,monospace;
+    /* ── POST-ONLY STYLES ── */
+    .post-grid {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 0;
+      max-width: 1080px;
+      margin: 0 auto;
+      width: 100%;
     }
-    html { scroll-behavior:smooth; }
-    body { font-family:var(--font); background:#f5f8fc; color:var(--b900); min-height:100vh; display:flex; flex-direction:column; }
-
-    /* NAV */
-    nav.topnav { padding:1.8rem 2.5rem; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--b100); }
-    .nav-logo { font-size:13px; letter-spacing:.12em; color:var(--b600); text-decoration:none; font-weight:700; text-transform:uppercase; }
-    .nav-links { display:flex; gap:2rem; list-style:none; }
-    .nav-links a { font-size:12px; letter-spacing:.1em; color:var(--b400); text-decoration:none; text-transform:uppercase; }
-    .nav-links a:hover,.nav-links a.active { color:var(--b900); }
-
-    /* LAYOUT */
-    .layout { display:grid; grid-template-columns:1fr 220px; gap:0; flex:1; }
-    .main-col { padding:3rem 3rem 5rem 2.5rem; border-right:1px solid var(--b100); }
-    .side-col { padding:3rem 2rem 4rem; }
-
-    /* BACK */
-    .back { font-size:12px; letter-spacing:.12em; color:var(--b400); text-decoration:none; text-transform:uppercase; display:inline-block; margin-bottom:2rem; }
-    .back:hover { color:var(--b900); }
-
-    /* POST HEADER */
-    .post-header { margin-bottom:3rem; padding-bottom:2rem; border-bottom:1px solid var(--b100); }
-    .post-num { font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--b200); margin-bottom:.7rem; }
-    .post-header h1 { font-size:clamp(20px,3.5vw,30px); font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--b900); line-height:1.25; margin-bottom:.7rem; }
-    .post-meta { font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--b200); margin-bottom:1rem; }
-    .post-tags { display:flex; flex-wrap:wrap; gap:.3rem .5rem; }
-    .ptag { font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--b600); background:var(--b50); border:1px solid var(--b100); padding:2px 7px; border-radius:1px; }
-
-    /* ARTICLE BODY */
-    .article { max-width:680px; }
-    .article p { font-size:14px; line-height:1.85; color:var(--b800); margin-bottom:1.4rem; }
-    .article h2 { font-size:13px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--b600); margin:2.5rem 0 1rem; padding-bottom:.4rem; border-bottom:1px solid var(--b100); }
-    .article h3 { font-size:13px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--b900); margin:1.8rem 0 .7rem; }
-    .article ul, .article ol { margin:.5rem 0 1.4rem 1.2rem; }
-    .article li { font-size:14px; line-height:1.8; color:var(--b800); margin-bottom:.3rem; }
-    .article strong { color:var(--b900); }
-    .article a { color:var(--b400); }
-    .article a:hover { color:var(--b900); }
-
-    /* CALLOUT BOXES */
-    .callout { border-left:3px solid; padding:.9rem 1.1rem; margin:1.4rem 0; border-radius:0 2px 2px 0; font-size:13px; line-height:1.75; }
-    .callout.info  { border-color:var(--b400); background:var(--b50); color:var(--b800); }
-    .callout.tip   { border-color:var(--green); background:var(--green-bg); color:var(--green); }
-    .callout.warn  { border-color:#a07800; background:var(--orange-bg); color:var(--orange); }
-    .callout.danger{ border-color:#c0392b; background:var(--red-bg); color:var(--red); }
-    .callout strong { display:block; font-size:10px; letter-spacing:.16em; text-transform:uppercase; margin-bottom:.4rem; }
-
-    /* COMPARISON TABLE */
-    .cmp-table { width:100%; border-collapse:collapse; margin:1.4rem 0; font-size:12px; }
-    .cmp-table th { font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--b600); background:var(--b50); padding:.6rem .8rem; border:1px solid var(--b100); text-align:left; font-weight:700; }
-    .cmp-table td { padding:.6rem .8rem; border:1px solid var(--b100); color:var(--b800); vertical-align:top; line-height:1.6; }
-    .cmp-table tr:hover td { background:var(--b50); }
-    .badge { display:inline-block; font-size:9px; letter-spacing:.1em; text-transform:uppercase; padding:2px 6px; border-radius:1px; border:1px solid; }
-    .badge.aad  { color:#185fa5; background:#e6f1fb; border-color:#b5d4f4; }
-    .badge.ad   { color:#1a5c2e; background:#e8f7ef; border-color:#9dd6b8; }
-    .badge.msa  { color:#7c3a00; background:#fff4e6; border-color:#f5c97a; }
-
-    /* CODE BLOCK */
-    .code-wrap { margin:1.4rem 0; }
-    .code-header { display:flex; justify-content:space-between; align-items:center; background:var(--b900); padding:.55rem 1rem; border-radius:2px 2px 0 0; }
-    .code-header .code-lang { font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--b200); }
-    .code-header .copy-btn { font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--b400); background:none; border:1px solid var(--b800); padding:2px 8px; border-radius:1px; cursor:pointer; font-family:var(--font); }
-    .code-header .copy-btn:hover { color:#fff; border-color:var(--b400); }
-    pre { background:#041e38; border-radius:0 0 2px 2px; padding:1.4rem 1.2rem; overflow-x:auto; margin:0; }
-    pre code { font-family:var(--font); font-size:12.5px; line-height:1.75; color:#b5d4f4; white-space:pre; }
-    /* syntax-ish tints */
-    .kw  { color:#85b7eb; } /* keywords */
-    .cm  { color:#4a7a9b; font-style:italic; } /* comments */
-    .str { color:#7ecba8; } /* strings */
-    .var { color:#d4b896; } /* variables */
-    .fn  { color:#c7a3e0; } /* functions/cmdlets */
-    .num { color:#f0c674; } /* numbers */
-    .op  { color:#85b7eb; } /* operators */
-
-    /* SECTION FLOW DIAGRAM */
-    .flow { display:flex; flex-direction:column; gap:.4rem; margin:1.2rem 0 1.6rem; }
-    .flow-step { display:flex; align-items:flex-start; gap:.8rem; }
-    .flow-icon { width:28px; height:28px; border-radius:50%; background:var(--b50); border:1px solid var(--b100); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:var(--b600); flex-shrink:0; margin-top:1px; }
-    .flow-text { font-size:13px; line-height:1.7; color:var(--b800); flex:1; }
-    .flow-arrow { font-size:14px; color:var(--b200); padding-left:8px; }
-
-    /* SIDEBAR */
-    .side-section { margin-bottom:2.5rem; }
-    .side-label { font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--b200); margin-bottom:1rem; padding-bottom:.4rem; border-bottom:1px solid var(--b100); }
-    .side-links { list-style:none; display:flex; flex-direction:column; gap:.5rem; }
-    .side-links a { font-size:12px; letter-spacing:.06em; color:var(--b400); text-decoration:none; text-transform:uppercase; display:flex; align-items:baseline; gap:.5rem; }
-    .side-links a:hover { color:var(--b900); }
-    .side-links .snum { font-size:10px; color:var(--b200); min-width:18px; }
-    .toc-links a { font-size:12px; color:var(--b400); text-decoration:none; display:block; padding:.25rem 0; letter-spacing:.04em; border-left:2px solid transparent; padding-left:.6rem; }
-    .toc-links a:hover { border-color:var(--b400); color:var(--b900); }
-
-    /* FOOTER */
-    footer { padding:1.4rem 2.5rem; border-top:1px solid var(--b100); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.5rem; }
-    .footer-text { font-size:11px; letter-spacing:.1em; color:var(--b200); text-transform:uppercase; }
-    .footer-links { display:flex; gap:1.5rem; }
-    .footer-links a { font-size:11px; letter-spacing:.1em; color:var(--b400); text-decoration:none; text-transform:uppercase; }
-    .footer-links a:hover { color:var(--b600); }
-    .post-nav { display:flex; justify-content:space-between; margin-top:3rem; padding-top:2rem; border-top:1px solid var(--b100); font-size:12px; letter-spacing:.08em; text-transform:uppercase; }
-    .post-nav a { color:var(--b400); text-decoration:none; }
-    .post-nav a:hover { color:var(--b900); }
-
-    @media(max-width:700px){
-      .layout{grid-template-columns:1fr;}
-      .main-col{padding:2rem 1.5rem; border-right:none; border-bottom:1px solid var(--b100);}
-      .side-col{padding:2rem 1.5rem;}
+    .post-main {
+      padding: 40px 48px 80px 24px;
+      border-right: 1px solid var(--border);
+    }
+    .post-side {
+      padding: 40px 20px 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
     }
 
-    /* DARK */
-    @media(prefers-color-scheme:dark){
-      body{background:#050e1a;color:#b5d4f4;}
-      nav.topnav,footer,.main-col,.post-header,.post-nav{border-color:#0c3055;}
-      .nav-logo{color:#85b7eb;}
-      .nav-links a,.back,.footer-links a{color:#378add;}
-      .nav-links a:hover,.nav-links a.active,.back:hover,.footer-links a:hover{color:#b5d4f4;}
-      .post-header h1,.article h3{color:#b5d4f4;}
-      .post-num,.post-meta,.article h2,.side-label{color:#185fa5;}
-      .article h2{border-color:#0c3055;}
-      .article p,.article li{color:#5a8fbf;}
-      .article strong{color:#85b7eb;}
-      .ptag{background:#0c3055;border-color:#185fa5;color:#85b7eb;}
-      .callout.info{background:#041e38;color:#85b7eb;border-color:#378add;}
-      .callout.tip{background:#041e0f;color:#4ab87a;border-color:#1a7a4a;}
-      .callout.warn{background:#1a1200;color:#c4952a;border-color:#a07800;}
-      .callout.danger{background:#1a0505;color:#d45c5c;border-color:#8b1a1a;}
-      .cmp-table th{background:#0c3055;color:#85b7eb;border-color:#185fa5;}
-      .cmp-table td{border-color:#0c3055;color:#5a8fbf;}
-      .cmp-table tr:hover td{background:#0a2040;}
-      .flow-icon{background:#0c3055;border-color:#185fa5;color:#85b7eb;}
-      .flow-text{color:#5a8fbf;}
-      .flow-arrow{color:#185fa5;}
-      .side-section .side-label{border-color:#0c3055;}
-      .side-links a,.toc-links a{color:#378add;}
-      .side-links a:hover,.toc-links a:hover{color:#b5d4f4;}
-      .toc-links a:hover{border-color:#378add;}
-      .footer-text{color:#185fa5;}
-      .post-nav a{color:#378add;}
-      .post-nav a:hover{color:#b5d4f4;}
+    /* post header */
+    .post-header {
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .post-num {
+      font-size: 11px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 10px;
+    }
+    .post-header h1 {
+      font-size: clamp(18px, 3vw, 26px);
+      font-weight: 700;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      color: var(--accent);
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+    .post-meta-row {
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .post-header-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ptag {
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: #0a1f10;
+      border: 1px solid #1a4020;
+      padding: 2px 8px;
+      border-radius: 2px;
+    }
+
+    /* article body */
+    .article { max-width: 680px; }
+    .article p {
+      font-size: 14px;
+      line-height: 1.9;
+      color: #b0b0b0;
+      margin-bottom: 20px;
+    }
+    .article h2 {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin: 40px 0 14px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .article h3 {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin: 28px 0 10px;
+    }
+    .article ul, .article ol { margin: 8px 0 20px 18px; }
+    .article li {
+      font-size: 14px;
+      line-height: 1.8;
+      color: #b0b0b0;
+      margin-bottom: 5px;
+    }
+    .article li::marker { color: var(--green); }
+    .article strong { color: var(--accent); }
+    .article a { color: var(--blue); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--cyan);
+      background: #031820;
+      border: 1px solid #0a3540;
+      padding: 1px 6px;
+      border-radius: 2px;
+    }
+
+    /* callouts */
+    .callout {
+      border-left: 3px solid;
+      padding: 12px 16px;
+      margin: 20px 0;
+      border-radius: 0 2px 2px 0;
+      font-size: 13px;
+      line-height: 1.75;
+    }
+    .callout strong {
+      display: block;
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    .callout.info   { border-color: var(--blue);   background: #071525; color: #8ab4e0; }
+    .callout.info   strong { color: var(--blue); }
+    .callout.tip    { border-color: var(--green);  background: #0a1f10; color: #7ecba8; }
+    .callout.tip    strong { color: var(--green); }
+    .callout.warn   { border-color: var(--amber);  background: #1a1000; color: #d4a030; }
+    .callout.warn   strong { color: var(--amber); }
+    .callout.danger { border-color: var(--red);    background: #200a0a; color: #d45c5c; }
+    .callout.danger strong { color: var(--red); }
+
+    /* comparison table */
+    .cmp-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 12px; }
+    .cmp-table th {
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      background: #031820;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      text-align: left;
+      font-weight: 700;
+    }
+    .cmp-table td {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      color: #b0b0b0;
+      vertical-align: top;
+      line-height: 1.6;
+    }
+    .cmp-table tr:hover td { background: #161616; }
+    .badge {
+      display: inline-block;
+      font-size: 9px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 2px;
+      border: 1px solid;
+    }
+    .badge.aad  { color: var(--blue);   background: #071525; border-color: #0a2a48; }
+    .badge.ad   { color: var(--green);  background: #0a1f10; border-color: #1a4020; }
+    .badge.msa  { color: var(--amber);  background: #1a1000; border-color: #3a2800; }
+
+    /* code blocks */
+    .code-wrap { margin: 20px 0; }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0a0a0a;
+      padding: 7px 14px;
+      border-radius: 2px 2px 0 0;
+      border: 1px solid var(--border);
+      border-bottom: none;
+    }
+    .code-lang { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+    .copy-btn {
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 2px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      transition: color .2s, border-color .2s;
+    }
+    .copy-btn:hover { color: var(--accent); border-color: var(--muted); }
+    pre {
+      background: #0a0a0a;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 2px 2px;
+      padding: 20px 18px;
+      overflow-x: auto;
+      margin: 0;
+    }
+    pre code {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      line-height: 1.8;
+      color: #b0c8e0;
+      white-space: pre;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    /* syntax colours */
+    .kw  { color: var(--blue); }
+    .cm  { color: #4a6a7a; font-style: italic; }
+    .str { color: var(--green); }
+    .var { color: #d4b896; }
+    .fn  { color: var(--purple); }
+    .num { color: var(--amber); }
+    .op  { color: var(--cyan); }
+
+    /* flow steps */
+    .flow { display: flex; flex-direction: column; gap: 6px; margin: 16px 0 24px; }
+    .flow-step { display: flex; align-items: flex-start; gap: 12px; }
+    .flow-icon {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: #071525;
+      border: 1px solid var(--blue);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+      color: var(--blue);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .flow-text { font-size: 13px; line-height: 1.75; color: #b0b0b0; flex: 1; padding-top: 3px; }
+    .flow-text strong { color: var(--accent); }
+
+    /* post nav */
+    .post-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .post-nav a { color: var(--blue); text-decoration: none; transition: color .2s; }
+    .post-nav a:hover { color: var(--cyan); }
+    .post-nav .dim { color: var(--muted); }
+
+    /* sidebar */
+    .side-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 14px 16px;
+      border-radius: 2px;
+    }
+    .side-label {
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .toc-links { display: flex; flex-direction: column; gap: 2px; }
+    .toc-links a {
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      display: block;
+      padding: 4px 8px;
+      border-left: 2px solid transparent;
+      transition: all .2s;
+      letter-spacing: .04em;
+    }
+    .toc-links a:hover { color: var(--green); border-left-color: var(--green); background: #0a1f10; }
+    .side-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .side-links a {
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      transition: color .2s;
+    }
+    .side-links a:hover { color: var(--accent); }
+    .snum { font-size: 10px; color: var(--border); min-width: 16px; }
+    .side-links li:first-child a { color: var(--green); }
+
+    @media(max-width: 700px) {
+      .post-grid { grid-template-columns: 1fr; }
+      .post-main { padding: 24px; border-right: none; border-bottom: 1px solid var(--border); }
+      .post-side { padding: 24px; }
     }
   </style>
 </head>
 <body>
 
-<nav class="topnav">
-  <a class="nav-logo" href="index.html">H.DAS</a>
+<nav>
+  <a class="nav-brand" href="index.html">H.DAS</a>
   <ul class="nav-links">
     <li><a href="notes.html" class="active">Blog</a></li>
     <li><a href="whoami.html">About</a></li>
+    <li><a href="certifications.html">Certs</a></li>
+    <li><a href="contact.html">Contact</a></li>
     <li><a href="https://github.com/harty1193" target="_blank" rel="noopener">GitHub</a></li>
   </ul>
 </nav>
 
-<div class="layout">
-<main class="main-col">
+<div class="post-grid">
+<main class="post-main">
+
   <a class="back" href="notes.html">← All notes</a>
 
   <header class="post-header">
-    <div class="post-num">Note 01</div>
+    <div class="post-num">Note 01 &nbsp;·&nbsp; Windows</div>
     <h1>Automating BitLocker Recovery Key Backup to the Cloud</h1>
-    <div class="post-meta">June 2026 &nbsp;·&nbsp; Hrudananda Das &nbsp;·&nbsp; 8 min read</div>
-    <div class="post-tags">
+    <div class="post-meta-row">June 2026 &nbsp;·&nbsp; Hrudananda Das &nbsp;·&nbsp; 8 min read</div>
+    <div class="post-header-tags">
       <span class="ptag">BitLocker</span>
       <span class="ptag">PowerShell</span>
       <span class="ptag">Entra ID</span>
@@ -312,34 +471,13 @@
     <h3>What the script does — step by step</h3>
 
     <div class="flow">
-      <div class="flow-step">
-        <div class="flow-icon">1</div>
-        <div class="flow-text"><strong>Input validation</strong> — Accepts a drive letter in either <code>C</code> or <code>C:</code> format, normalises it, and verifies the drive exists before doing anything.</div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-icon">2</div>
-        <div class="flow-text"><strong>Cmdlet availability check</strong> — Confirms that <code>Get-BitLockerVolume</code>, <code>BackupToAAD-BitLockerKeyProtector</code>, and <code>Remove-BitLockerKeyProtector</code> are all present on the machine. Exits cleanly if any are missing.</div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-icon">3</div>
-        <div class="flow-text"><strong>Key protector discovery</strong> — Retrieves the BitLocker volume and filters for <code>RecoveryPassword</code> type protectors only.</div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-icon">4</div>
-        <div class="flow-text"><strong>Single vs. multiple key handling</strong> — If only one recovery key exists, uses it automatically. If multiple exist, lists them and prompts the user to choose one to keep.</div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-icon">5</div>
-        <div class="flow-text"><strong>Backup to Entra ID</strong> — Calls <code>BackupToAAD-BitLockerKeyProtector</code> with the selected key protector ID. Fails with a clear error if the backup fails.</div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-icon">6</div>
-        <div class="flow-text"><strong>Cleanup of stale keys</strong> — Lists remaining (unselected) recovery protectors and asks for explicit <code>YES</code> confirmation before removing each one.</div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-icon">7</div>
-        <div class="flow-text"><strong>Summary output</strong> — Reports which key was kept and backed up, which were removed, and which failed to remove — colour-coded for at-a-glance reading.</div>
-      </div>
+      <div class="flow-step"><div class="flow-icon">1</div><div class="flow-text"><strong>Input validation</strong> — Accepts a drive letter in either <code>C</code> or <code>C:</code> format, normalises it, and verifies the drive exists before doing anything.</div></div>
+      <div class="flow-step"><div class="flow-icon">2</div><div class="flow-text"><strong>Cmdlet availability check</strong> — Confirms that <code>Get-BitLockerVolume</code>, <code>BackupToAAD-BitLockerKeyProtector</code>, and <code>Remove-BitLockerKeyProtector</code> are all present. Exits cleanly if any are missing.</div></div>
+      <div class="flow-step"><div class="flow-icon">3</div><div class="flow-text"><strong>Key protector discovery</strong> — Retrieves the BitLocker volume and filters for <code>RecoveryPassword</code> type protectors only.</div></div>
+      <div class="flow-step"><div class="flow-icon">4</div><div class="flow-text"><strong>Single vs. multiple key handling</strong> — If only one recovery key exists, uses it automatically. If multiple exist, lists them and prompts the user to choose one to keep.</div></div>
+      <div class="flow-step"><div class="flow-icon">5</div><div class="flow-text"><strong>Backup to Entra ID</strong> — Calls <code>BackupToAAD-BitLockerKeyProtector</code> with the selected key protector ID. Fails with a clear error if the backup fails.</div></div>
+      <div class="flow-step"><div class="flow-icon">6</div><div class="flow-text"><strong>Cleanup of stale keys</strong> — Lists remaining (unselected) recovery protectors and asks for explicit <code>YES</code> confirmation before removing each one.</div></div>
+      <div class="flow-step"><div class="flow-icon">7</div><div class="flow-text"><strong>Summary output</strong> — Reports which key was kept and backed up, which were removed, and which failed to remove — colour-coded for at-a-glance reading.</div></div>
     </div>
 
     <div class="callout danger">
@@ -437,7 +575,7 @@
     <span class="fn">BackupToAAD-BitLockerKeyProtector</span> <span class="op">`</span>
         <span class="op">-</span>MountPoint <span class="var">$driveLetter</span> <span class="op">`</span>
         <span class="op">-</span>KeyProtectorId <span class="var">$selectedKP</span>.KeyProtectorId <span class="op">`</span>
-        <span class="op">-ErrorAction</span> Stop
+        <span class="op">-</span>ErrorAction Stop
 
     <span class="fn">Write-Host</span> <span class="str">"Backup to AAD completed successfully for KeyProtectorId: $($selectedKP.KeyProtectorId)"</span> <span class="op">-ForegroundColor</span> Green
 
@@ -464,7 +602,7 @@
                     <span class="fn">Remove-BitLockerKeyProtector</span> <span class="op">`</span>
                         <span class="op">-</span>MountPoint <span class="var">$driveLetter</span> <span class="op">`</span>
                         <span class="op">-</span>KeyProtectorId <span class="var">$kp</span>.KeyProtectorId <span class="op">`</span>
-                        <span class="op">-ErrorAction</span> Stop
+                        <span class="op">-</span>ErrorAction Stop
 
                     <span class="var">$removedIds</span> <span class="op">+=</span> <span class="var">$kp</span>.KeyProtectorId
                     <span class="fn">Write-Host</span> <span class="str">"Removed KeyProtectorId: $($kp.KeyProtectorId)"</span> <span class="op">-ForegroundColor</span> Green
@@ -534,7 +672,7 @@
         </tr>
         <tr>
           <td><code>Access denied</code> on AD backup</td>
-          <td>Computer object lacks write permissions to msTPM-OwnerInformation attribute</td>
+          <td>Computer object lacks write permissions to msTPM attribute</td>
           <td>Check AD delegation for BitLocker key backup; verify via MBAM or GPO <em>Store BitLocker recovery information in AD DS</em>.</td>
         </tr>
         <tr>
@@ -546,15 +684,15 @@
     </table>
 
     <div class="post-nav">
-      <span style="color:var(--b200); font-size:12px; letter-spacing:.08em; text-transform:uppercase;">← Previous</span>
-      <a href="post-002-coming-soon.html">Note 02 — Coming soon →</a>
+      <span class="dim">← Previous</span>
+      <a href="notes.html">Back to all notes →</a>
     </div>
 
   </article>
 </main>
 
 <!-- SIDEBAR -->
-<aside class="side-col">
+<aside class="post-side">
 
   <div class="side-section">
     <div class="side-label">On this page</div>
@@ -572,18 +710,18 @@
   <div class="side-section">
     <div class="side-label">All Notes</div>
     <ul class="side-links">
-      <li><a href="post-001-bitlocker-backup.html"><span class="snum">01</span><span>BitLocker Backup</span></a></li>
-      <li style="opacity:.5"><a href="post-002-coming-soon.html"><span class="snum">02</span><span>Coming soon</span></a></li>
-      <li style="opacity:.5"><a href="post-003-coming-soon.html"><span class="snum">03</span><span>Coming soon</span></a></li>
+      <li><a href="post-001-bitlocker-backup.html"><span class="snum">01</span> BitLocker Backup</a></li>
+      <li style="opacity:.4"><a href="notes.html"><span class="snum">02</span> Coming soon</a></li>
+      <li style="opacity:.4"><a href="notes.html"><span class="snum">03</span> Coming soon</a></li>
     </ul>
   </div>
 
   <div class="side-section">
     <div class="side-label">Related</div>
     <ul class="side-links">
-      <li><a href="https://learn.microsoft.com/en-us/powershell/module/bitlocker/" target="_blank" rel="noopener"><span class="snum">↗</span><span>BitLocker PS Docs</span></a></li>
-      <li><a href="https://learn.microsoft.com/en-us/azure/active-directory/devices/device-management-azure-portal" target="_blank" rel="noopener"><span class="snum">↗</span><span>Entra Device Mgmt</span></a></li>
-      <li><a href="https://github.com/harty1193" target="_blank" rel="noopener"><span class="snum">↗</span><span>GitHub</span></a></li>
+      <li><a href="https://learn.microsoft.com/en-us/powershell/module/bitlocker/" target="_blank" rel="noopener"><span class="snum">↗</span> BitLocker PS Docs</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/active-directory/devices/device-management-azure-portal" target="_blank" rel="noopener"><span class="snum">↗</span> Entra Device Mgmt</a></li>
+      <li><a href="https://github.com/harty1193" target="_blank" rel="noopener"><span class="snum">↗</span> GitHub</a></li>
     </ul>
   </div>
 
@@ -591,19 +729,16 @@
 </div>
 
 <footer>
-  <span class="footer-text">© 2026 Hrudananda Das</span>
-  <div class="footer-links">
-    <a href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener">LinkedIn</a>
-    <a href="https://github.com/harty1193" target="_blank" rel="noopener">GitHub</a>
-    <a href="/feed.xml">RSS</a>
-  </div>
+  <span>© 2026 Hrudananda Das</span>
+  <a href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener">LinkedIn</a>
+  <a href="https://github.com/harty1193" target="_blank" rel="noopener">GitHub</a>
+  <a href="/feed.xml">RSS</a>
 </footer>
 
 <script>
 function copyCode(btn) {
   const pre = btn.closest('.code-wrap').querySelector('pre');
-  const text = pre.innerText;
-  navigator.clipboard.writeText(text).then(() => {
+  navigator.clipboard.writeText(pre.innerText).then(() => {
     btn.textContent = 'Copied!';
     setTimeout(() => btn.textContent = 'Copy', 2000);
   });
