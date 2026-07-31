@@ -1,1 +1,346 @@
-html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Hrudananda Das</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ── CONTACT-ONLY STYLES ── */
+    .page-grid-contact {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 0;
+      max-width: 1080px;
+      margin: 0 auto;
+      width: 100%;
+      flex: 1;
+    }
+    .main-col {
+      padding: 40px 40px 80px 24px;
+      border-right: 1px solid var(--border);
+    }
+    .side-col-contact {
+      padding: 40px 20px 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    /* direct contact cards */
+    .direct-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+    .direct-card {
+      flex: 1;
+      min-width: 160px;
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: border-color .2s;
+    }
+    .direct-card:nth-child(1) { border-left: 3px solid var(--green); }
+    .direct-card:nth-child(2) { border-left: 3px solid var(--blue); }
+    .direct-card:nth-child(3) { border-left: 3px solid var(--purple); }
+    .direct-card:hover { border-top-color: var(--muted); border-bottom-color: var(--muted); border-right-color: var(--muted); }
+    .dc-label { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+    .dc-value { font-size: 13px; color: var(--accent); font-weight: bold; }
+    .direct-card:nth-child(1) .dc-value { color: var(--green); }
+    .direct-card:nth-child(2) .dc-value { color: var(--blue); }
+    .direct-card:nth-child(3) .dc-value { color: var(--purple); }
+    .dc-arrow { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* divider label */
+    .sec-label {
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* form */
+    .contact-form { max-width: 540px; }
+    .field { margin-bottom: 22px; }
+    .field label {
+      display: block;
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 6px;
+    }
+    .field input, .field textarea {
+      width: 100%;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 9px 12px;
+      border-radius: 2px;
+      outline: none;
+      transition: border-color .2s;
+      resize: vertical;
+    }
+    .field input:focus, .field textarea:focus { border-color: var(--cyan); }
+    .field textarea { min-height: 140px; }
+    .field .hint { font-size: 11px; color: var(--muted); letter-spacing: .04em; margin-top: 5px; font-style: italic; }
+    .char-counter { font-size: 10px; color: var(--muted); letter-spacing: .08em; text-align: right; margin-top: 4px; }
+    .char-counter span { color: var(--cyan); }
+
+    /* submit */
+    .submit-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 6px; }
+    .btn-submit {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: #0d0d0d;
+      background: var(--cyan);
+      border: 1px solid var(--cyan);
+      padding: 9px 22px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background .2s, border-color .2s;
+      font-weight: bold;
+    }
+    .btn-submit:hover { background: var(--blue); border-color: var(--blue); }
+    .btn-submit:disabled { background: var(--border); border-color: var(--border); color: var(--muted); cursor: not-allowed; }
+
+    /* status */
+    .status-msg {
+      display: none;
+      margin-top: 20px;
+      padding: 12px 16px;
+      border-left: 3px solid;
+      font-size: 13px;
+      line-height: 1.7;
+      border-radius: 0 2px 2px 0;
+    }
+    .status-msg.success { border-color: var(--green);  background: #0a1f10; color: var(--green); }
+    .status-msg.error   { border-color: var(--red);    background: #200a0a; color: var(--red); }
+    .status-msg.loading { border-color: var(--cyan);   background: #031820; color: var(--cyan); }
+
+    /* sidebar */
+    .side-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 14px 16px;
+      border-radius: 2px;
+    }
+    .side-label {
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .side-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .side-links a {
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      transition: color .2s;
+    }
+    .side-links a:hover { color: var(--accent); }
+    .side-links .snum { color: var(--border); font-size: 10px; min-width: 14px; }
+    .side-links a:nth-child(1):hover { color: var(--green); }
+    .side-links a:nth-child(2):hover { color: var(--blue); }
+    .side-links a:nth-child(3):hover { color: var(--purple); }
+    .side-note { font-size: 12px; line-height: 1.75; color: var(--muted); }
+    .side-note .highlight { color: var(--orange); }
+
+    @media(max-width: 700px) {
+      .page-grid-contact { grid-template-columns: 1fr; }
+      .main-col { padding: 24px; border-right: none; border-bottom: 1px solid var(--border); }
+      .side-col-contact { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">H.DAS</a>
+  <ul class="nav-links">
+    <li><a href="notes.html">Blog</a></li>
+    <li><a href="whoami.html">About</a></li>
+    <li><a href="certifications.html">Certs</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+    <li><a href="https://github.com/harty1193" target="_blank" rel="noopener">GitHub</a></li>
+  </ul>
+</nav>
+
+<div class="page-grid-contact">
+<main class="main-col">
+
+  <a class="back" href="index.html">← Back</a>
+
+  <div class="page-header">
+    <h1>Contact Me</h1>
+    <p class="subtitle">Drop a message — I'll reply within a day or two</p>
+  </div>
+
+  <!-- DIRECT CONTACT CARDS -->
+  <div class="direct-strip">
+    <a class="direct-card" href="mailto:hrudananda.das@proton.me">
+      <span class="dc-label">Email — ProtonMail</span>
+      <span class="dc-value">hrudananda.das@proton.me</span>
+      <span class="dc-arrow">Send email →</span>
+    </a>
+    <a class="direct-card" href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener">
+      <span class="dc-label">LinkedIn</span>
+      <span class="dc-value">linkedin.com/in/harty1193</span>
+      <span class="dc-arrow">Connect ↗</span>
+    </a>
+    <a class="direct-card" href="https://github.com/harty1193" target="_blank" rel="noopener">
+      <span class="dc-label">GitHub</span>
+      <span class="dc-value">github.com/harty1193</span>
+      <span class="dc-arrow">Follow ↗</span>
+    </a>
+  </div>
+
+  <!-- FORM -->
+  <div class="sec-label">Or send a message via the form below</div>
+
+  <div class="contact-form">
+    <div class="field">
+      <label for="senderEmail">Your Email Address *</label>
+      <input type="email" id="senderEmail" name="senderEmail" placeholder="you@example.com" required autocomplete="email">
+    </div>
+
+    <div class="field">
+      <label for="subject">Subject *</label>
+      <input type="text" id="subject" name="subject" placeholder="What's this about?" required maxlength="120">
+      <div class="char-counter"><span id="subjectCount">0</span> / 120</div>
+    </div>
+
+    <div class="field">
+      <label for="body">Message *</label>
+      <textarea id="body" name="body" placeholder="Write your message here..." required maxlength="2000"></textarea>
+      <div class="char-counter"><span id="bodyCount">0</span> / 2000</div>
+      <div class="hint">Plain text only. No attachments — use the email link above if you need to send files.</div>
+    </div>
+
+    <div class="submit-row">
+      <button class="btn-submit" id="submitBtn" onclick="submitForm()">Send Message →</button>
+    </div>
+
+    <div class="status-msg" id="statusMsg"></div>
+  </div>
+
+</main>
+
+<!-- SIDEBAR -->
+<aside class="side-col-contact">
+
+  <div class="side-section">
+    <div class="side-label">Reach me directly</div>
+    <ul class="side-links">
+      <li><a href="mailto:hrudananda.das@proton.me"><span class="snum">✉</span> ProtonMail</a></li>
+      <li><a href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener"><span class="snum">↗</span> LinkedIn</a></li>
+      <li><a href="https://github.com/harty1193" target="_blank" rel="noopener"><span class="snum">↗</span> GitHub</a></li>
+    </ul>
+  </div>
+
+  <div class="side-section">
+    <div class="side-label">Location</div>
+    <p class="side-note">
+      Bengaluru, Karnataka, India<br>
+      <span class="highlight">IST (UTC +5:30)</span><br><br>
+      Open to relocation — Netherlands, Finland, Sweden, Ireland
+    </p>
+  </div>
+
+  <div class="side-section">
+    <div class="side-label">Navigation</div>
+    <ul class="side-links">
+      <li><a href="whoami.html"><span class="snum">→</span> About me</a></li>
+      <li><a href="certifications.html"><span class="snum">→</span> Certifications</a></li>
+      <li><a href="notes.html"><span class="snum">→</span> Blog</a></li>
+      <li><a href="index.html"><span class="snum">→</span> Home</a></li>
+    </ul>
+  </div>
+
+</aside>
+</div>
+
+<footer>
+  <span>© 2026 Hrudananda Das</span>
+  <a href="https://linkedin.com/in/harty1193" target="_blank" rel="noopener">LinkedIn</a>
+  <a href="https://github.com/harty1193" target="_blank" rel="noopener">GitHub</a>
+  <a href="notes.html">Blog</a>
+</footer>
+
+<script>
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSeJG3iodvEEGpqIw7jFO_Z88-r28Iq17NhjXc3OgfGvH5-Z9q-ds4H-VVykkc5OOsxA/exec';
+
+  document.getElementById('subject').addEventListener('input', function() {
+    document.getElementById('subjectCount').textContent = this.value.length;
+  });
+  document.getElementById('body').addEventListener('input', function() {
+    document.getElementById('bodyCount').textContent = this.value.length;
+  });
+
+  function showStatus(type, html) {
+    const el = document.getElementById('statusMsg');
+    el.className = 'status-msg ' + type;
+    el.innerHTML = html;
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function submitForm() {
+    const email   = document.getElementById('senderEmail').value.trim();
+    const subject = document.getElementById('subject').value.trim();
+    const body    = document.getElementById('body').value.trim();
+    const btn     = document.getElementById('submitBtn');
+
+    if (!email || !subject || !body) { showStatus('error', 'All three fields are required.'); return; }
+    const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRx.test(email)) { showStatus('error', 'Please enter a valid email address.'); return; }
+
+    btn.disabled = true;
+    showStatus('loading', 'Sending...');
+
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, subject, body, timestamp: new Date().toISOString() })
+    })
+    .then(() => {
+      showStatus('success', '<strong>Message sent.</strong><br>Thank you — I\'ll get back to you at <strong>' + email + '</strong> soon.');
+      document.getElementById('senderEmail').value = '';
+      document.getElementById('subject').value = '';
+      document.getElementById('body').value = '';
+      document.getElementById('subjectCount').textContent = '0';
+      document.getElementById('bodyCount').textContent = '0';
+      btn.disabled = false;
+    })
+    .catch(() => {
+      showStatus('error', 'Something went wrong. Please email directly at <a href="mailto:hrudananda.das@proton.me" style="color:var(--red)">hrudananda.das@proton.me</a>');
+      btn.disabled = false;
+    });
+  }
+</script>
+
+</body>
+</html>
