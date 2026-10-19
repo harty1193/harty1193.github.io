@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kitten vaccination and health chart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e8f0ed; --surface:#ffffff; --ink:#18302d; --muted:#5a706c; --line:#c9d8d3;
+  --teal:#0f6b63; --amber:#e0a100; --amber-bg:#fff3cf; --done:#2f8f5b;
+  --head:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#10201e; --surface:#182c29; --ink:#e6f1ee; --muted:#93aaa5; --line:#2b4541;
+    --teal:#4fc3b5; --amber:#f2b92e; --amber-bg:#3a3012; --done:#5cc58c;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--body);
+  padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+main{max-width:640px;margin:0 auto;padding:20px 16px 48px}
+h1{font:700 2rem/1.1 var(--head);margin:0 0 6px;letter-spacing:-.01em}
+h2{font:700 1.2rem/1.2 var(--head);margin:32px 0 12px}
+.sub{color:var(--muted);margin:0 0 18px}
+.age{background:var(--teal);color:#fff;border-radius:14px;padding:16px 18px;margin-bottom:8px}
+.age b{font:700 1.6rem/1 var(--head);display:block;margin-bottom:4px}
+.age span{opacity:.9;font-size:.92rem}
+.bar{height:8px;border-radius:4px;background:rgba(255,255,255,.28);margin-top:12px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:#fff;transition:width .3s}
+.ms{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--line);
+  border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.ms.soon{border-left-color:var(--amber);background:linear-gradient(0deg,var(--surface),var(--surface)),var(--amber-bg)}
+.ms.done{border-left-color:var(--done)}
+.top{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.date{font:700 1.05rem/1.2 var(--head)}
+.age-l{color:var(--muted);font-size:.85rem}
+.badge{font-size:.78rem;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--bg);color:var(--muted);white-space:nowrap}
+.soon .badge{background:var(--amber-bg);color:var(--ink);border:1px solid var(--amber)}
+.done .badge{background:var(--done);color:#fff}
+ul{list-style:none;margin:10px 0 0;padding:0}
+li label{display:flex;gap:10px;align-items:flex-start;padding:7px 0;cursor:pointer}
+li input{width:20px;height:20px;margin:1px 0 0;accent-color:var(--teal);flex:none}
+li input:checked+span{color:var(--muted);text-decoration:line-through}
+input:focus-visible,textarea:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;font-size:.95rem}
+th{font-family:var(--head);width:38%}
+tr:last-child th,tr:last-child td{border-bottom:0}
+.note{color:var(--muted);font-size:.9rem}
+textarea{width:100%;min-height:90px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;
+  background:var(--surface);color:var(--ink);font:inherit;resize:vertical}
+.actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+button{font:600 .95rem var(--body);padding:10px 16px;border-radius:10px;border:1px solid var(--teal);
+  background:var(--surface);color:var(--teal);cursor:pointer}
+@media print{
+  body{background:#fff;color:#000} .actions,textarea{display:none}
+  .age{background:#fff;color:#000;border:1px solid #000} .bar{display:none}
+  .ms{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<main>
+  <h1>Kitten health chart</h1>
+  <p class="sub">Born Aug 9, 2026. Kitten series, then yearly care.</p>
+
+  <div class="age" aria-live="polite">
+    <b id="ageNow">–</b>
+    <span id="ageNext">–</span>
+    <div class="bar" role="progressbar" aria-label="Checklist progress" aria-valuemin="0" aria-valuemax="100"><i id="prog"></i></div>
+  </div>
+
+  <h2>Kitten schedule</h2>
+  <div id="timeline"></div>
+
+  <h2>Every month</h2>
+  <table>
+    <tr><th>Flea and tick</th><td>On the 9th. Check the label for minimum age and weight.</td></tr>
+    <tr><th>Weigh-in</th><td>At home, same scale, same time of day. Write it down below.</td></tr>
+    <tr><th>Deworming</th><td>Monthly until 6 months, then every 3 months.</td></tr>
+    <tr><th>Nails</th><td>Trim every 2–4 weeks.</td></tr>
+  </table>
+
+  <h2>After the first year</h2>
+  <table>
+    <tr><th>Each birthday (Aug 9)</th><td>Exam, FVRCP booster, rabies booster if due, fecal test, dental check.</td></tr>
+    <tr><th>Age 7+</th><td>Vet visits every 6 months. Yearly bloodwork and blood pressure.</td></tr>
+  </table>
+
+  <h2>Notes and weights</h2>
+  <textarea id="notes" aria-label="Notes" placeholder="Vet name, vaccine batch numbers, weights by date…"></textarea>
+  <div class="actions">
+    <button id="print" type="button">Print or save as PDF</button>
+    <button id="reset" type="button">Clear checkmarks</button>
+  </div>
+  <p class="note">Your vet’s protocol overrides this chart. Checkmarks and notes stay in this browser only.</p>
+</main>
+
+<script>
+(function(){
+  var BORN = new Date(2026,7,9);
+  var MS = [
+    {id:"v1", date:[2026,9,24], label:"By Oct 24, 2026", age:"10 weeks", items:["Vet exam","FVRCP #1","FeLV #1","Deworming","Flea and tick start"]},
+    {id:"v2", date:[2026,10,14], label:"Nov 14, 2026", age:"14 weeks", items:["FVRCP #2","FeLV #2","Deworming"]},
+    {id:"v3", date:[2026,10,29], label:"Nov 29 – Dec 12, 2026", age:"16–18 weeks", items:["FVRCP #3","Rabies (12 weeks or older)","Deworming"]},
+    {id:"v4", date:[2027,0,9], label:"Jan 9 – Feb 9, 2027", age:"5–6 months", items:["Spay or neuter","Microchip","Last kitten deworming"]},
+    {id:"v5", date:[2027,1,9], label:"Feb 9, 2027", age:"6 months", items:["Adult food switch (ask the vet)","Dental check"]},
+    {id:"v6", date:[2027,7,9], label:"Aug 9, 2027", age:"1 year", items:["Annual exam","FVRCP booster","Rabies booster","Fecal test"]}
+  ];
+  var store = {};
+  function load(){ try{ store = JSON.parse(localStorage.getItem("kitten-chart")||"{}"); }catch(e){ store = {}; } }
+  function save(){ try{ localStorage.setItem("kitten-chart", JSON.stringify(store)); }catch(e){} }
+  load();
+
+  var DAY = 86400000;
+  function today(){ var t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); }
+
+  function render(){
+    var box = document.getElementById("timeline");
+    box.innerHTML = "";
+    var total = 0, checked = 0;
+    MS.forEach(function(m){
+      var d = new Date(m.date[0], m.date[1], m.date[2]);
+      var left = Math.round((d - today())/DAY);
+      var n = m.items.filter(function(_,i){ return store[m.id+i]; }).length;
+      var all = n === m.items.length;
+      total += m.items.length; checked += n;
+      var cls = all ? "done" : (left <= 7 ? "soon" : "");
+      var badge = all ? "Done" : (left < 0 ? "Overdue" : left === 0 ? "Today" : left <= 7 ? "Due in "+left+" d" : "In "+(left>=60? Math.round(left/30)+" mo" : left+" d"));
+      var sec = document.createElement("section");
+      sec.className = "ms "+cls;
+      var html = '<div class="top"><div><div class="date">'+m.label+'</div><div class="age-l">'+m.age+'</div></div><span class="badge">'+badge+'</span></div><ul>';
+      m.items.forEach(function(t,i){
+        var k = m.id+i;
+        html += '<li><label><input type="checkbox" data-k="'+k+'"'+(store[k]?" checked":"")+'><span>'+t+'</span></label></li>';
+      });
+      sec.innerHTML = html + "</ul>";
+      box.appendChild(sec);
+    });
+    document.getElementById("prog").style.width = Math.round(100*checked/total)+"%";
+    document.querySelector(".bar").setAttribute("aria-valuenow", Math.round(100*checked/total));
+  }
+
+  function age(){
+    var days = Math.floor((today() - BORN)/DAY), w = Math.floor(days/7);
+    var txt = days < 0 ? "Not born yet" : (days < 150 ? w+" weeks old" : Math.floor(days/30.4)+" months old");
+    document.getElementById("ageNow").textContent = txt;
+    var next = null;
+    for (var i=0;i<MS.length;i++){
+      var d = new Date(MS[i].date[0], MS[i].date[1], MS[i].date[2]);
+      var done = MS[i].items.every(function(_,j){ return store[MS[i].id+j]; });
+      if (!done){ next = MS[i]; break; }
+    }
+    document.getElementById("ageNext").textContent = next ? "Next up: "+next.label : "Everything on the chart is done.";
+  }
+
+  document.getElementById("timeline").addEventListener("change", function(e){
+    var k = e.target.getAttribute("data-k");
+    if (!k) return;
+    store[k] = e.target.checked; save(); render(); age();
+  });
+
+  var notes = document.getElementById("notes");
+  try{ notes.value = localStorage.getItem("kitten-notes")||""; }catch(e){}
+  notes.addEventListener("input", function(){ try{ localStorage.setItem("kitten-notes", notes.value); }catch(e){} });
+
+  document.getElementById("reset").addEventListener("click", function(){
+    store = {}; save(); render(); age();
+  });
+  document.getElementById("print").addEventListener("click", function(){ window.print(); });
+
+  render(); age();
+})();
+</script>
+</body>
+</html>
